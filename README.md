@@ -3,4 +3,10 @@ SCAR System Discord Bot<br>
 
 **Der Bot kann:**<br>
 
--Nichts
+-Bannen
+-Kicken
+-Verwarnen
+-Muten
+-Private Nachrichten verschicken
+-Als Bot schreiben
+-Reaction Roles
