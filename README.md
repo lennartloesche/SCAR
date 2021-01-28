@@ -1,0 +1,2 @@
+# scar
+Der Scar Discordbot
