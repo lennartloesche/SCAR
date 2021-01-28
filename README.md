@@ -8,6 +8,7 @@ SCAR System Discord Bot<br>
 -Private Nachrichten verschicken<br>
 -Als Bot schreiben<br>
 -Reaction Roles<br>
+-Wordblacklist<br>
 <br>
 **In Arbeit:**<br>
 -CSGO Stats abfrage<br>
