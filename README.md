@@ -1,5 +1,6 @@
 # SCAR System
 SCAR System Discord Bot<br>
+<br>
 **Der Bot kann:**<br>
 -Bannen<br>
 -Kicken<br>
