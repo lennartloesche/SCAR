@@ -352,141 +352,50 @@ if (command == "unmute") {
     message.channel.send(embed);
   }
 
-// ❯ Reaction Role - CSGO
-if (command == "cs") {
-  if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(embed);
-  let embed = new Discord.MessageEmbed()
-  .setThumbnail('https://lh3.googleusercontent.com/proxy/hj1C35sGhpQiBkj7MbXZhOL36OUeTplK4x_Di_vE7d1CcNU_xa2oK-XD6Rq_B3SiubFTXEEqezgTvUa4fBXrlSF74FxdieTk9VLsUQ_s2-OjjLk_WrGJq-jk47Q')
-  .addFields(
-    { name: 'Counter Strike : Global Offensive', value: '⠀' },
-  )
-  .addFields(
-    { name: '⠀', value: 'Wenn du die Berechtigung für die CS:GO Channel haben willst reagiere hier.' },
-  )
-  .addFields(
-    { name: '⠀', value: 'Solltest du die Channel nicht mehr brauchen kannst du die Reaktion wieder entfernen' },
-  )
-  .setColor('#c72810')
-  let msgEmbed = await message.channel.send(embed)
-  msgEmbed.react('🔫');
+// ❯ CSGO
+if (command == "csgo") {
+
+  let role = message.guild.roles.cache.find(r => r.name === "Counter Strike : Global Offensive");
+  let member = message.member
+
+  if(message.member.roles.cache.has(role)) {
+
+    member.roles.remove(role).catch(console.error);
+    console.log(`CSGO REMOVED`);
+    var embed = new Discord.MessageEmbed()
+    .setDescription('**❯ CSGO REMOVED ✓**')
+    .setColor("#c72810");
+    message.channel.send(embed);
+  
+  } else {
+  
+    member.roles.add(role).catch(console.error);
+    console.log(`CSGO ADDED`);
+    var embed = new Discord.MessageEmbed()
+    .setDescription('**❯ CSGO ADDED ✓**')
+    .setColor("#c72810");
+    message.channel.send(embed);
+  
+  }
+
 }
 
-client.on('messageReactionAdd', async (reaction, user) => {
-  if (reaction.message.partial) await reaction.message.fetch();
-  if (reaction.partial) await reaction.fetch();
-  if (user.bot) return;
-  if (!reaction.message.guild) return;
+if (command == "removecsgo") {
 
-  if (reaction.message.channel.id === "760592891574747157") {
-    if (reaction.emoji.name === '🔫') {
-      await reaction.message.guild.member(user.id).roles.add("757223856363536474")
-    }
-  }
-})
+  let role = message.guild.roles.cache.find(r => r.name === "Counter Strike : Global Offensive");
+  let member = message.member
 
-client.on('messageReactionRemove', async (reaction, user) => {
-  if (reaction.message.partial) await reaction.message.fetch();
-  if (reaction.partial) await reaction.fetch();
-  if (user.bot) return;
-  if (!reaction.message.guild) return;
-
-  if (reaction.message.channel.id === "760592891574747157") {
-    if (reaction.emoji.name === '🔫') {
-      await reaction.message.guild.member(user.id).roles.remove("757223856363536474")
-    }
-  }
-})
-
-// ❯ Reaction Role - LoL
-if (command == "lol") {
-  if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(embed);
-  let embed = new Discord.MessageEmbed()
-  .setThumbnail('https://sm.ign.com/ign_de/screenshot/default/signup_logo2_pm9x.png')
-  .addFields(
-    { name: 'League of Legends', value: '⠀' },
-  )
-  .addFields(
-    { name: '⠀', value: 'Wenn du die Berechtigung für die LoL Channel haben willst reagiere hier.' },
-  )
-  .addFields(
-    { name: '⠀', value: 'Solltest du die Channel nicht mehr brauchen kannst du die Reaktion wieder entfernen' },
-  )
-  .setColor('#c72810')
-  let msgEmbed = await message.channel.send(embed)
-  msgEmbed.react('⚔');
+  member.roles.remove(role).catch(console.error);
+  console.log(`CSGO REMOVED`);
+  var embed = new Discord.MessageEmbed()
+  .setDescription('**❯ CSGO REMOVED ✓**')
+  .setColor("#c72810");
+  message.channel.send(embed);
 }
 
-client.on('messageReactionAdd', async (reaction, user) => {
-  if (reaction.message.partial) await reaction.message.fetch();
-  if (reaction.partial) await reaction.fetch();
-  if (user.bot) return;
-  if (!reaction.message.guild) return;
 
-  if (reaction.message.channel.id === "760592891574747157") {
-    if (reaction.emoji.name === '⚔') {
-      await reaction.message.guild.members.cache.get(user.id).roles.add("757223854707048539")
-    }
-  }
-})
-
-client.on('messageReactionRemove', async (reaction, user) => {
-  if (reaction.message.partial) await reaction.message.fetch();
-  if (reaction.partial) await reaction.fetch();
-  if (user.bot) return;
-  if (!reaction.message.guild) return;
-
-  if (reaction.message.channel.id === "760592891574747157") {
-    if (reaction.emoji.name === '⚔') {
-      await reaction.message.guild.members.cache.get(user.id).roles.remove("757223854707048539")
-    }
-  }
-})
-
-// ❯ Reaction Role - Rocket League
-if (command == "rl") {
-  if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(embed);
-  let embed = new Discord.MessageEmbed()
-  .setThumbnail('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Rocket_League_logo.svg/1200px-Rocket_League_logo.svg.png')
-  .addFields(
-    { name: 'Rocket League', value: '⠀' },
-  )
-  .addFields(
-    { name: '⠀', value: 'Wenn du die Berechtigung für die Rocket League Channel haben willst reagiere hier.' },
-  )
-  .addFields(
-    { name: '⠀', value: 'Solltest du die Channel nicht mehr brauchen kannst du die Reaktion wieder entfernen' },
-  )
-  .setColor('#c72810')
-  let msgEmbed = await message.channel.send(embed)
-  msgEmbed.react('🚘');
-}
-
-client.on('messageReactionAdd', async (reaction, user) => {
-  if (reaction.message.partial) await reaction.message.fetch();
-  if (reaction.partial) await reaction.fetch();
-  if (user.bot) return;
-  if (!reaction.message.guild) return;
-
-  if (reaction.message.channel.id === "760592891574747157") {
-    if (reaction.emoji.name === '🚘') {
-      await reaction.message.guild.members.cache.get(user.id).roles.add("761960632396283914")
-    }
-  }
-})
-
-client.on('messageReactionRemove', async (reaction, user) => {
-  if (reaction.message.partial) await reaction.message.fetch();
-  if (reaction.partial) await reaction.fetch();
-  if (user.bot) return;
-  if (!reaction.message.guild) return;
-
-  if (reaction.message.channel.id === "760592891574747157") {
-    if (reaction.emoji.name === '🚘') {
-      await reaction.message.guild.members.cache.get(user.id).roles.remove("761960632396283914")
-    }
-  }
-})
 
 }
+
 )
 client.login(config.token);
