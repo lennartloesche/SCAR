@@ -1,16 +1,12 @@
-# SCAR System
+# [SCAR System](https://discord.gg/qFmgBPg)
 SCAR System Discord Bot<br>
 <br>
 **Der Bot kann:**<br>
--Bannen<br>
--Kicken<br>
--Verwarnen<br>
--Muten<br>
--Private Nachrichten verschicken<br>
--Als Bot schreiben<br>
--Reaction Roles<br>
--Wordblacklist<br>
-<br>
-**In Arbeit:**<br>
--CSGO Stats abfrage<br>
--Mehr<br>
+- Bannen<br>
+- Kicken<br>
+- Verwarnen<br>
+- Muten<br>
+- Servermitgliedern DMs schreiben<br>
+- Als Bot schreiben<br>
+- Blacklist von Wörtern<br>
+- Rollenzuweisung per Command
