@@ -1,6 +1,6 @@
 {
   "name": "SCAR SYSTEM",
-  "version": "1.0",
+  "version": "2.0",
   "description": "SCAR System Discordbot",
   "main": "main.js",
   "dependencies": {

@@ -10,7 +10,7 @@ client.on('ready', () => {
   client.user.setStatus('Online')
   client.user.setActivity("+help", {
     type: "STREAMING",
-    url: "https://twitch.tv/milchi_true"
+    url: "https://twitch.tv/milchitrue"
   });
 });
 
@@ -21,31 +21,39 @@ console.log(`❯ Bot gestartet als ${client.user.username}`)
 
 // ❯ Join / Leave Message
 client.on("guildMemberAdd", member => {
-  const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === '╔-🔓-eingangshalle');
-  welcomeChannel.send (`${member} hat den Server betreten!`)
+  var willkommenschannel = config.willkommenschannel
+  const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
+  welcomeChannel.send (`${member} hat den Server betreten`)
 })
 client.on("guildMemberRemove", member => {
-  const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === '╔-🔓-eingangshalle');
-  welcomeChannel.send (`${member.user.tag} hat den Server verlassen.`)
+  var willkommenschannel = config.willkommenschannel
+  const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
+  welcomeChannel.send (`${member.user.tag} hat den Server verlassen`)
 })
 
 // ❯ Member Count
 client.on('ready', () =>{
-  let myGuild = client.guilds.cache.get('757168568315150337')
+  var counterchannelid = config.counterchannelid
+  var counterrole = config.counterroleid
+  let myGuild = client.guilds.cache.get(`${counterrole}`)
   let membercount = myGuild.memberCount;
-  const membercountchannel = myGuild.channels.cache.get('788127232530579478');
+  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
   membercountchannel.setName('Mitglieder: ' + membercount)
 })
 client.on('guildMemberAdd', member => {
-  let myGuild = client.guilds.cache.get('757168568315150337')
+  var counterchannelid = config.counterchannelid
+  var counterrole = config.counterroleid
+  let myGuild = client.guilds.cache.get(`${counterrole}`)
   let membercount = myGuild.memberCount;
-  const membercountchannel = myGuild.channels.cache.get('788127232530579478');
+  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
   membercountchannel.setName('Mitglieder: ' + membercount)
 })
 client.on('guildMemberRemove', member => {
-  let myGuild = client.guilds.cache.get('757168568315150337')
+  var counterchannelid = config.counterchannelid
+  var counterrole = config.counterroleid
+  let myGuild = client.guilds.cache.get(`${counterrole}`)
   let membercount = myGuild.memberCount;
-  const membercountchannel = myGuild.channels.cache.get('788127232530579478');
+  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
   membercountchannel.setName('Mitglieder: ' + membercount)
 })
 
@@ -179,13 +187,13 @@ if (command == "warn") {
     if(!mentioned) return message.channel.send(""); 
     let reason = args.slice(1).join(' ') 
     var warningEmbed = new Discord.MessageEmbed()
-        .setColor('#c72810')
-        .setTitle("Du wurdest verwarnt!")
-        .addFields(
-            { name: 'Grund', value: reason },
-        )
-        .setTimestamp(message.createdAt)
-        .setFooter("System", "https://file.lennartloesche.de/a602919780d37bd5a562b5514322781d.png")          
+      .setColor('#c72810')
+      .setTitle("Du wurdest verwarnt!")
+      .addFields(
+        { name: 'Grund', value: reason },
+      )
+      .setTimestamp(message.createdAt)
+      .setFooter("System", "https://file.lennartloesche.de/a602919780d37bd5a562b5514322781d.png")          
     mentioned.send(warningEmbed); 
     var warnSuccessfulEmbed = new Discord.MessageEmbed()
     .setTimestamp(message.createdAt)
@@ -354,46 +362,91 @@ if (command == "unmute") {
 
 // ❯ CSGO
 if (command == "csgo") {
-
-  let role = message.guild.roles.cache.find(r => r.name === "Counter Strike : Global Offensive");
+  var csgo = config.csgo
+  let role = message.guild.roles.cache.find(role => role.name === `${csgo}`);
   let member = message.member
 
-  if(message.member.roles.cache.has(role)) {
-
+  if(message.member.roles.cache.some(role => role.name === `${csgo}`)) {
     member.roles.remove(role).catch(console.error);
-    console.log(`CSGO REMOVED`);
     var embed = new Discord.MessageEmbed()
-    .setDescription('**❯ CSGO REMOVED ✓**')
-    .setColor("#c72810");
-    message.channel.send(embed);
-  
-  } else {
-  
-    member.roles.add(role).catch(console.error);
-    console.log(`CSGO ADDED`);
-    var embed = new Discord.MessageEmbed()
-    .setDescription('**❯ CSGO ADDED ✓**')
-    .setColor("#c72810");
-    message.channel.send(embed);
-  
+    .setDescription(`**❯ ${csgo} REMOVED ✘**`)
+    .setColor("RED");
+    message.channel.send(embed);  
   }
-
+  else {
+    member.roles.add(role).catch(console.error);
+    var embed = new Discord.MessageEmbed()
+    .setDescription(`**❯ ${csgo} ADDED ✓**`)
+    .setColor("GREEN");
+    message.channel.send(embed);
+  }
 }
 
-if (command == "removecsgo") {
-
-  let role = message.guild.roles.cache.find(r => r.name === "Counter Strike : Global Offensive");
+// ❯ LOL
+if (command == "lol") {
+  var lol = config.lol
+  let role = message.guild.roles.cache.find(role => role.name === `${lol}`);
   let member = message.member
 
-  member.roles.remove(role).catch(console.error);
-  console.log(`CSGO REMOVED`);
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ CSGO REMOVED ✓**')
-  .setColor("#c72810");
-  message.channel.send(embed);
+  if(message.member.roles.cache.some(role => role.name === `${lol}`)) {
+    member.roles.remove(role).catch(console.error);
+    var embed = new Discord.MessageEmbed()
+    .setDescription(`**❯ ${lol} REMOVED ✘**`)
+    .setColor("RED");
+    message.channel.send(embed);  
+  }
+  else {
+    member.roles.add(role).catch(console.error);
+    var embed = new Discord.MessageEmbed()
+    .setDescription(`**❯ ${lol} ADDED ✓**`)
+    .setColor("GREEN");
+    message.channel.send(embed);
+  }
 }
 
+// ❯ Rocket League
+if (command == "rl") {
+  var rl = config.rl
+  let role = message.guild.roles.cache.find(role => role.name === `${rl}`);
+  let member = message.member
 
+  if(message.member.roles.cache.some(role => role.name === `${rl}`)) {
+    member.roles.remove(role).catch(console.error);
+    var embed = new Discord.MessageEmbed()
+    .setDescription(`**❯ ${rl} REMOVED ✘**`)
+    .setColor("RED");
+    message.channel.send(embed);  
+  }
+  else {
+    member.roles.add(role).catch(console.error);
+    var embed = new Discord.MessageEmbed()
+    .setDescription(`**❯ ${rl} ADDED ✓**`)
+    .setColor("GREEN");
+    message.channel.send(embed);
+  }
+}
+
+// ❯ Valorant
+if (command == "valorant") {
+  var valorant = config.valorant
+  let role = message.guild.roles.cache.find(role => role.name === `${valorant}`);
+  let member = message.member
+
+  if(message.member.roles.cache.some(role => role.name === `${valorant}`)) {
+    member.roles.remove(role).catch(console.error);
+    var embed = new Discord.MessageEmbed()
+    .setDescription(`**❯ ${valorant} REMOVED ✘**`)
+    .setColor("RED");
+    message.channel.send(embed);  
+  }
+  else {
+    member.roles.add(role).catch(console.error);
+    var embed = new Discord.MessageEmbed()
+    .setDescription(`**❯ ${valorant} ADDED ✓**`)
+    .setColor("GREEN");
+    message.channel.send(embed);
+  }
+}
 
 }
 
