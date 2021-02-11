@@ -23,12 +23,24 @@ console.log(`❯ Bot gestartet als ${client.user.username}`)
 client.on("guildMemberAdd", member => {
   var willkommenschannel = config.willkommenschannel
   const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
-  welcomeChannel.send (`${member} hat den Server betreten`)
+  var embed = new Discord.MessageEmbed()
+  .setDescription(` **${member}** hat den Server betreten`)
+  .setThumbnail(member.user.displayAvatarURL())
+  .setColor("#c72810")
+  .setTimestamp()
+  .setFooter(`${client.user.username}`, `https://i.imgur.com/c2PSVVq.png`)
+  welcomeChannel.send(embed)
 })
 client.on("guildMemberRemove", member => {
   var willkommenschannel = config.willkommenschannel
   const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
-  welcomeChannel.send (`${member.user.tag} hat den Server verlassen`)
+  var embed = new Discord.MessageEmbed()
+  .setDescription(` **${member.user.tag}** hat den Server verlassen`)
+  .setThumbnail(member.user.displayAvatarURL())
+  .setColor("#c72810")
+  .setTimestamp()
+  .setFooter(`${client.user.username}`, `https://i.imgur.com/c2PSVVq.png`)
+  welcomeChannel.send(embed)
 })
 
 // ❯ Member Count
@@ -104,7 +116,7 @@ if (command == "help") {
   { name: 'Unmute', value: '+unmute <@Member>'},
 )
 .setTimestamp(message.createdAt)
-.setFooter(`${client.user.username}`, `https://file.lennartloesche.de/a602919780d37bd5a562b5514322781d.png`)
+.setFooter(`${client.user.username}`, `https://i.imgur.com/c2PSVVq.png`)
 .setColor("#c72810");
 message.channel.send(embed);
 }
@@ -193,11 +205,11 @@ if (command == "warn") {
         { name: 'Grund', value: reason },
       )
       .setTimestamp(message.createdAt)
-      .setFooter("System", "https://file.lennartloesche.de/a602919780d37bd5a562b5514322781d.png")          
+      .setFooter("System", "https://i.imgur.com/c2PSVVq.png")          
     mentioned.send(warningEmbed); 
     var warnSuccessfulEmbed = new Discord.MessageEmbed()
     .setTimestamp(message.createdAt)
-    .setFooter("System", "https://file.lennartloesche.de/a602919780d37bd5a562b5514322781d.png")
+    .setFooter("System", "https://i.imgur.com/c2PSVVq.png")
     var embed = new Discord.MessageEmbed()
     .setDescription('**❯ Erfolgreich verwarnt ✓**')
     .setColor("#c72810");
