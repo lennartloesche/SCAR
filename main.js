@@ -25,10 +25,9 @@ client.on("guildMemberAdd", member => {
   const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
   var embed = new Discord.MessageEmbed()
   .setDescription(` **${member}** hat den Server betreten`)
-  .setThumbnail(member.user.displayAvatarURL())
   .setColor("#c72810")
   .setTimestamp()
-  .setFooter(`${client.user.username}`, `https://i.imgur.com/c2PSVVq.png`)
+  .setFooter(`${client.user.username}`, member.user.displayAvatarURL())
   welcomeChannel.send(embed)
 })
 client.on("guildMemberRemove", member => {
@@ -36,10 +35,9 @@ client.on("guildMemberRemove", member => {
   const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
   var embed = new Discord.MessageEmbed()
   .setDescription(` **${member.user.tag}** hat den Server verlassen`)
-  .setThumbnail(member.user.displayAvatarURL())
   .setColor("#c72810")
   .setTimestamp()
-  .setFooter(`${client.user.username}`, `https://i.imgur.com/c2PSVVq.png`)
+  .setFooter(`${client.user.username}`, member.user.displayAvatarURL())
   welcomeChannel.send(embed)
 })
 
@@ -92,31 +90,17 @@ if (command == "help") {
   var embed = new Discord.MessageEmbed()
 .setTitle(`${client.user.username} • Help`)
 .addFields(
-  { name: 'Nachrichten senden', value: '+send <Message>'},
-)
-.addFields(
-  { name: 'Mitglied eine DM schicken', value: '+msg <@Member> <Message>'},
-)
-.addFields(
-  { name: 'Nachrichten löschen', value: '+clear <1-99>' },
-)
-.addFields(
-  { name: 'Mitglied Verwarnen', value: '+warn <@Member> <Grund>'},
-)
-.addFields(
-  { name: 'Kicken', value: '+kick <@Member>'},
-)
-.addFields(
-  { name: 'Bannen', value: '+ban <@Member> <Grund>'},
-)
-.addFields(
-  { name: 'Mute', value: '+mute <@Member> <Zeit | 1s = 1 Sekunde | 1m = 1 Minute | 1h = 1 Stunde>'},
-)
-.addFields(
-  { name: 'Unmute', value: '+unmute <@Member>'},
+  { name: '`+send <Message>`', value: 'Sendet eine Nachricht als Bot'},
+  { name: '`+msg <@Member> <Message>`', value: 'Schreibt einer Person Privat Nachrichten'},
+  { name: '`+clear <1-99>`', value: 'Löscht Nachrichten' },
+  { name: '`+warn <@Member> <Grund>`', value: 'Verwarnt eine Person'},
+  { name: '`+kick <@Member>`', value: 'Kickt eine Person'},
+  { name: '`+ban <@Member> <Grund>`', value: 'Bannt eine Person'},
+  { name: '`+mute <@Member> <Zeit | 1s = 1 Sekunde | 1m = 1 Minute | 1h = 1 Stunde>`', value: 'Muted eine Person'},
+  { name: '`+unmute <@Member>`', value: 'Unmutet eine Person'}
 )
 .setTimestamp(message.createdAt)
-.setFooter(`${client.user.username}`, `https://i.imgur.com/c2PSVVq.png`)
+.setFooter(`${client.user.username}`, message.member.user.displayAvatarURL())
 .setColor("#c72810");
 message.channel.send(embed);
 }
@@ -205,11 +189,11 @@ if (command == "warn") {
         { name: 'Grund', value: reason },
       )
       .setTimestamp(message.createdAt)
-      .setFooter("System", "https://i.imgur.com/c2PSVVq.png")          
+      .setFooter(`${client.user.username}`, message.member.user.displayAvatarURL())          
     mentioned.send(warningEmbed); 
     var warnSuccessfulEmbed = new Discord.MessageEmbed()
     .setTimestamp(message.createdAt)
-    .setFooter("System", "https://i.imgur.com/c2PSVVq.png")
+    .setFooter(`${client.user.username}`, message.member.user.displayAvatarURL())
     var embed = new Discord.MessageEmbed()
     .setDescription('**❯ Erfolgreich verwarnt ✓**')
     .setColor("#c72810");
@@ -463,4 +447,5 @@ if (command == "valorant") {
 }
 
 )
+
 client.login(config.token);
