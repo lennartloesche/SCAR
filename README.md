@@ -5,7 +5,7 @@ SCAR System Discord Bot<br>
 - Bannen<br>
 - Kicken<br>
 - Verwarnen<br>
-- Muten<br>
+- Muten & Unmuten<br>
 - Servermitgliedern DMs schreiben<br>
 - Als Bot schreiben<br>
 - Blacklist von Wörtern<br>
