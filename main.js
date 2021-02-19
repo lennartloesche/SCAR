@@ -97,8 +97,7 @@ if (command == "help") {
   { name: '`+kick <@Member>`', value: 'Kickt eine Person'},
   { name: '`+ban <@Member> <Grund>`', value: 'Bannt eine Person'},
   { name: '`+mute <@Member> <Zeit | 1s = 1 Sekunde | 1m = 1 Minute | 1h = 1 Stunde>`', value: 'Muted eine Person'},
-  { name: '`+unmute <@Member>`', value: 'Unmutet eine Person'}
-)
+  { name: '`+unmute <@Member>`', value: 'Unmutet eine Person'})
 .setTimestamp(message.createdAt)
 .setFooter(client.user.username, client.user.displayAvatarURL())
 .setColor("#c72810");
@@ -197,7 +196,7 @@ if (command == "warn") {
     var embed = new Discord.MessageEmbed()
     .setDescription('**❯ Erfolgreich verwarnt ✓**')
     .setColor("#c72810");
-    message.channel.send(embed);
+    message.channel.send(warnSuccessfulEmbed);
     message.delete();
 }
 
@@ -336,7 +335,6 @@ if (command == "mute") {
 }
 
 if (command == "unmute") {
-
   let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.cache.get(args[0]));
   var embed = new Discord.MessageEmbed()
   .setDescription('**❯ Fehlende UID ✘**')
