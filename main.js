@@ -147,7 +147,6 @@ if (command === "msg") {
     message.delete();
 }
 
-
 // ❯ Clear
 if (command == "clear") {
   var embed = new Discord.MessageEmbed()
@@ -182,21 +181,16 @@ if (command == "warn") {
     if(!mentioned) return message.channel.send(""); 
     let reason = args.slice(1).join(' ') 
     var warningEmbed = new Discord.MessageEmbed()
-      .setColor('#c72810')
-      .setTitle("Du wurdest verwarnt!")
-      .addFields(
-        { name: 'Grund', value: reason },
-      )
-      .setTimestamp(message.createdAt)
-      .setFooter(`${client.user.username}`, client.user.displayAvatarURL())          
-    mentioned.send(warningEmbed); 
-    var warnSuccessfulEmbed = new Discord.MessageEmbed()
+    .setColor('#c72810')
+    .setTitle("Du wurdest verwarnt!")
+    .addFields({ name: 'Grund', value: reason })
     .setTimestamp(message.createdAt)
-    .setFooter(`${client.user.username}`, client.user.displayAvatarURL())
+    .setFooter(client.user.username, client.user.displayAvatarURL())          
+    mentioned.send(warningEmbed);
     var embed = new Discord.MessageEmbed()
     .setDescription('**❯ Erfolgreich verwarnt ✓**')
-    .setColor("#c72810");
-    message.channel.send(warnSuccessfulEmbed);
+    .setColor("Green");
+    message.channel.send(embed);
     message.delete();
 }
 
