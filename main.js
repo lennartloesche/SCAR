@@ -27,7 +27,7 @@ client.on("guildMemberAdd", member => {
   .setDescription(` **${member}** hat den Server betreten`)
   .setColor("#c72810")
   .setTimestamp()
-  .setFooter(`${client.user.username}`, member.user.displayAvatarURL())
+  .setFooter(client.user.username, member.user.displayAvatarURL())
   welcomeChannel.send(embed)
 })
 client.on("guildMemberRemove", member => {
@@ -37,7 +37,7 @@ client.on("guildMemberRemove", member => {
   .setDescription(` **${member.user.tag}** hat den Server verlassen`)
   .setColor("#c72810")
   .setTimestamp()
-  .setFooter(`${client.user.username}`, member.user.displayAvatarURL())
+  .setFooter(client.user.username, member.user.displayAvatarURL())
   welcomeChannel.send(embed)
 })
 
@@ -100,7 +100,7 @@ if (command == "help") {
   { name: '`+unmute <@Member>`', value: 'Unmutet eine Person'}
 )
 .setTimestamp(message.createdAt)
-.setFooter(`${client.user.username}`, message.member.user.displayAvatarURL())
+.setFooter(client.user.username, client.user.displayAvatarURL())
 .setColor("#c72810");
 message.channel.send(embed);
 }
@@ -189,11 +189,11 @@ if (command == "warn") {
         { name: 'Grund', value: reason },
       )
       .setTimestamp(message.createdAt)
-      .setFooter(`${client.user.username}`, message.member.user.displayAvatarURL())          
+      .setFooter(`${client.user.username}`, client.user.displayAvatarURL())          
     mentioned.send(warningEmbed); 
     var warnSuccessfulEmbed = new Discord.MessageEmbed()
     .setTimestamp(message.createdAt)
-    .setFooter(`${client.user.username}`, message.member.user.displayAvatarURL())
+    .setFooter(`${client.user.username}`, client.user.displayAvatarURL())
     var embed = new Discord.MessageEmbed()
     .setDescription('**❯ Erfolgreich verwarnt ✓**')
     .setColor("#c72810");
@@ -354,7 +354,7 @@ if (command == "unmute") {
   .setColor("#c72810");
   tomute.roles.remove(muterole.id);
     message.channel.send(embed);
-  }
+}
 
 // ❯ CSGO
 if (command == "csgo") {
