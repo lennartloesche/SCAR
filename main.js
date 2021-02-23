@@ -29,6 +29,9 @@ client.on("guildMemberAdd", member => {
   .setTimestamp()
   .setFooter(client.user.username, member.user.displayAvatarURL())
   welcomeChannel.send(embed)
+	let role = message.guild.roles.cache.find(r => r.name === `${autorole}`);
+  let member2 = message.mentions.members.first();
+  member2.roles.add(role).catch(console.error);
 })
 client.on("guildMemberRemove", member => {
   var willkommenschannel = config.willkommenschannel
