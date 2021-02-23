@@ -1,6 +1,7 @@
+// ❯ Import Packages
 const Discord = require("discord.js");
-const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"]});
 const ms = require("ms");
+const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"]});
 
 // ❯ Verbindung zur Config
 const config = require("./config.json");
@@ -29,9 +30,8 @@ client.on("guildMemberAdd", member => {
   .setTimestamp()
   .setFooter(client.user.username, member.user.displayAvatarURL())
   welcomeChannel.send(embed)
-	let role = message.guild.roles.cache.find(r => r.name === `${autorole}`);
-  let member2 = message.mentions.members.first();
-  member2.roles.add(role).catch(console.error);
+  var role = member.guild.roles.cache.find(role => role.name == "𝕊ℂ𝔸ℝ » Spieler")
+  member.roles.add(role);
 })
 client.on("guildMemberRemove", member => {
   var willkommenschannel = config.willkommenschannel
