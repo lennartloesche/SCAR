@@ -7,13 +7,22 @@ const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"]
 const config = require("./config.json");
 
 // ❯ Rich Presence/RPC
-client.on('ready', () => {
-  client.user.setStatus('Online')
-  client.user.setActivity("+help", {
-    type: "STREAMING",
-    url: "https://twitch.tv/milchitrue"
-  });
-});
+setInterval(() => {
+  const activities = [
+      `+help`,
+      `${client.guilds.cache.size} Server`,
+      `${client.channels.cache.size} Channel`,
+      `${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} User`
+  ];
+  let activity = activities[Math.floor(Math.random() * activities.length)];
+  client.user.setActivity(
+      activity,
+      {
+        type: "STREAMING",
+        url: "https://www.twitch.tv/milchitrue"
+      }
+  );
+}, 15000);
 
 // ❯ Online Konsole
 client.on('ready', async () => {
