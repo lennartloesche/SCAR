@@ -334,7 +334,7 @@ if (command == "mute") {
 
   var embed = new Discord.MessageEmbed()
   .setDescription('**❯ Erfolgreich unmuted ✓**')
-  .setColor("#c72810");
+  .setColor("#008000");
   setTimeout(function(){
   tomute.roles.remove(muterole.id);
   message.channel.send(embed).then(m => m.delete({timeout: 2000}))},ms(mutetime));
@@ -355,7 +355,7 @@ if (command == "unmute") {
 
   var embed = new Discord.MessageEmbed()
   .setDescription('**❯ Erfolgreich unmuted ✓**')
-  .setColor("#c72810");
+  .setColor("#008000");
   tomute.roles.remove(muterole.id);
     message.channel.send(embed);
 }
