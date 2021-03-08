@@ -4,7 +4,7 @@ const ms = require("ms");
 const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"]});
 
 // ❯ Verbindung zur Config
-// const config = require("./config.json");
+const config = require("./config.json");
 
 // ❯ Rich Presence/RPC
 setInterval(() => {
