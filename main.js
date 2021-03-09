@@ -10,7 +10,6 @@ const config = require("./config.json");
 setInterval(() => {
   const activities = [
       `+help`,
-      `${client.guilds.cache.size} Server`,
       `${client.channels.cache.size} Channel`,
       `${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} User`
   ];
@@ -448,8 +447,5 @@ if (command == "valorant") {
   }
 }
 
-}
-
-)
-
+})
 client.login(process.env.DJS_TOKEN);
