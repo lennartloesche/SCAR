@@ -9,9 +9,7 @@ const config = require("./config.json");
 // ❯ Rich Presence/RPC
 setInterval(() => {
   const activities = [
-      `+help`,
-      `${client.channels.cache.size} Channel`,
-      `${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} User`
+      `+help | ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} Mitglieder`
   ];
   let activity = activities[Math.floor(Math.random() * activities.length)];
   client.user.setActivity(

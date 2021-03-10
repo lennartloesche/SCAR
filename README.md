@@ -1,7 +1,7 @@
 # [SCAR System](https://discord.gg/qFmgBPg)
 SCAR System Discord Bot<br>
+Dieser Discordbot hilft bei der Verwaltung des SCAR Discord Servers, er bietet unter anderem folgende Funktionen:
 <br>
-**Der Bot kann:**<br>
 - Bannen<br>
 - Kicken<br>
 - Verwarnen<br>
