@@ -447,7 +447,7 @@ if (command == "valorant") {
   }
 }
 
-// ❯ CSGO Stats
+// ❯ CSGO Statistiken
 if (command == "csgostats") {
   const Spieler = args[0];
   const url = `https://public-api.tracker.gg/v2/csgo/standard/profile/steam/${Spieler}`;
@@ -471,14 +471,14 @@ if (command == "csgostats") {
     });
   }
   const embed = new Discord.MessageEmbed()
-    .setAuthor(`${client.user.username} • CSGO STATS`, client.user.displayAvatarURL(), `${url}`)
+    .setAuthor(`${client.user.username} • Statistiken für ${Spieler}`, client.user.displayAvatarURL())
     .setTimestamp(message.createdAt)
     .setFooter(`${client.user.username}`, client.user.displayAvatarURL())
     .setColor("#4680FC")
     .addFields(result);
   message.channel.send(embed);
   })
-  .catch(e=> console.log('Error fetching API: ', e));
+  .catch(e=> console.log('API Error: ', e));
 }
 
 })
