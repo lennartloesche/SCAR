@@ -449,7 +449,7 @@ if (command == "valorant") {
 
 // ❯ CSGO Stats
 if (command == "csgostats") {
-  const Spieler = args[0].toLowerCase();
+  const Spieler = args[0];
   const url = `https://public-api.tracker.gg/v2/csgo/standard/profile/steam/${Spieler}`;
   fetch(url, {
     method: 'GET',
