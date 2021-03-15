@@ -445,5 +445,39 @@ if (command == "valorant") {
   }
 }
 
+// ❯ CSGO Stats
+if (command == "csgo") {
+  const Spieler = args[0].toLowerCase();
+  const url = `https://public-api.tracker.gg/v2/csgo/standard/profile/steam/${Spieler}`;
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'TRN-Api-Key': `c15d418d-fc9f-4906-9c45-da17425d6125`,
+      'Accept': 'application/json',
+      'Accept-Encoding': 'gzip'
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+  const result = new Array();
+  for(let i in data.data.segments[0].stats) {
+    const selectedStat = data.data.segments[0].stats[i];
+    result.push({
+      name: selectedStat.displayName,
+      value: selectedStat.displayValue,
+      inline: true
+    });
+  }
+  const embed = new Discord.MessageEmbed()
+    .setAuthor(`${client.user.username} • CSGO STATS`, client.user.displayAvatarURL(), `${url}`)
+    .setTimestamp(message.createdAt)
+    .setFooter(`${client.user.username}`, client.user.displayAvatarURL())
+    .setColor("#4680FC")
+    .addFields(result);
+  message.channel.send(embed);
+  })
+  .catch(e=> console.log('Error fetching API: ', e));
+}
+
 })
 client.login(process.env.DJS_TOKEN);
