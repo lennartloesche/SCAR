@@ -1,6 +1,7 @@
 // ❯ Import Packages
 const Discord = require("discord.js");
 const ms = require("ms");
+const fetch = require('node-fetch');
 const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"]});
 
 // ❯ Verbindung zur Config
@@ -100,6 +101,7 @@ if (command == "help") {
 .setTitle(`${client.user.username} • Help`)
 .addFields(
   { name: '`+send <Message>`', value: 'Sendet eine Nachricht als Bot'},
+  { name: '`+csgostats <SteamID>`', value: 'CSGO Statistiken einer Person'},
   { name: '`+msg <@Member> <Message>`', value: 'Schreibt einer Person Privat Nachrichten'},
   { name: '`+clear <1-99>`', value: 'Löscht Nachrichten' },
   { name: '`+warn <@Member> <Grund>`', value: 'Verwarnt eine Person'},
@@ -446,7 +448,7 @@ if (command == "valorant") {
 }
 
 // ❯ CSGO Stats
-if (command == "csgo") {
+if (command == "csgostats") {
   const Spieler = args[0].toLowerCase();
   const url = `https://public-api.tracker.gg/v2/csgo/standard/profile/steam/${Spieler}`;
   fetch(url, {
