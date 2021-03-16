@@ -482,4 +482,4 @@ if (command == "csgostats") {
 }
 
 })
-client.login(process.env.DJS_TOKEN);
+client.login(config.token);
