@@ -447,6 +447,28 @@ if (command == "valorant") {
   }
 }
 
+// ❯ Rainbow
+if (command == "r6") {
+  var r6 = config.r6
+  let role = message.guild.roles.cache.find(role => role.name === `${r6}`);
+  let member = message.member
+
+  if(message.member.roles.cache.some(role => role.name === `${r6}`)) {
+    member.roles.remove(role).catch(console.error);
+    var embed = new Discord.MessageEmbed()
+    .setDescription(`**❯ ${r6} REMOVED ✘**`)
+    .setColor("RED");
+    message.channel.send(embed);  
+  }
+  else {
+    member.roles.add(role).catch(console.error);
+    var embed = new Discord.MessageEmbed()
+    .setDescription(`**❯ ${r6} ADDED ✓**`)
+    .setColor("GREEN");
+    message.channel.send(embed);
+  }
+}
+
 // ❯ CSGO Statistiken
 if (command == "csgostats") {
   const Spieler = args[0];
