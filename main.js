@@ -81,6 +81,13 @@ client.on('guildMemberRemove', member => {
 client.on('message', message => {
   if(config.FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
     message.delete()
+    var embed = new Discord.MessageEmbed()
+      .setTitle(`${client.user.username} • Chatguard`)
+      .setDescription(`Dieses Wort darfst du nicht benutzen!`)
+      .setTimestamp(message.createdAt)
+      .setFooter(client.user.username, client.user.displayAvatarURL())
+      .setColor("#c72810");
+    message.channel.send(embed);
   }
 })
 
@@ -97,21 +104,21 @@ client.on("message", async message => {
 
 // ❯ Help
 if (command == "help") {
-  var embed = new Discord.MessageEmbed()
-.setTitle(`${client.user.username} • Help`)
-.addFields(
-  { name: '`+send <Message>`', value: 'Sendet eine Nachricht als Bot'},
-  { name: '`+csgostats <SteamID>`', value: 'CSGO Statistiken einer Person'},
-  { name: '`+msg <@Member> <Message>`', value: 'Schreibt einer Person Privat Nachrichten'},
-  { name: '`+clear <1-99>`', value: 'Löscht Nachrichten' },
-  { name: '`+warn <@Member> <Grund>`', value: 'Verwarnt eine Person'},
-  { name: '`+kick <@Member>`', value: 'Kickt eine Person'},
-  { name: '`+ban <@Member> <Grund>`', value: 'Bannt eine Person'},
-  { name: '`+mute <@Member> <Zeit | 1s = 1 Sekunde | 1m = 1 Minute | 1h = 1 Stunde>`', value: 'Muted eine Person'},
-  { name: '`+unmute <@Member>`', value: 'Unmutet eine Person'})
-.setTimestamp(message.createdAt)
-.setFooter(client.user.username, client.user.displayAvatarURL())
-.setColor("#c72810");
+var embed = new Discord.MessageEmbed()
+  .setTitle(`${client.user.username} • Help`)
+  .addFields(
+    { name: '`+send <Message>`', value: 'Sendet eine Nachricht als Bot'},
+    { name: '`+csgostats <SteamID>`', value: 'CSGO Statistiken einer Person'},
+    { name: '`+msg <@Member> <Message>`', value: 'Schreibt einer Person Privat Nachrichten'},
+    { name: '`+clear <1-99>`', value: 'Löscht Nachrichten' },
+    { name: '`+warn <@Member> <Grund>`', value: 'Verwarnt eine Person'},
+    { name: '`+kick <@Member>`', value: 'Kickt eine Person'},
+    { name: '`+ban <@Member> <Grund>`', value: 'Bannt eine Person'},
+    { name: '`+mute <@Member> <Zeit | 1s = 1 Sekunde | 1m = 1 Minute | 1h = 1 Stunde>`', value: 'Muted eine Person'},
+    { name: '`+unmute <@Member>`', value: 'Unmutet eine Person'})
+  .setTimestamp(message.createdAt)
+  .setFooter(client.user.username, client.user.displayAvatarURL())
+  .setColor("#c72810");
 message.channel.send(embed);
 }
 
