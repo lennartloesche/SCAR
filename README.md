@@ -2,11 +2,14 @@
 SCAR System Discord Bot<br>
 Dieser Discordbot hilft bei der Verwaltung des SCAR Discord Servers, er bietet unter anderem folgende Funktionen:
 <br>
-- Bannen<br>
-- Kicken<br>
-- Verwarnen<br>
-- Muten & Unmuten<br>
-- Servermitgliedern DMs schreiben<br>
-- Als Bot schreiben<br>
-- Blacklist von Wörtern<br>
-- Rollenzuweisung per Command
+- Ban Guild Member<br>
+- Kick Guild Member<br>
+- Warn Guild Member<br>
+- Mute/Tempmute & Unmute Guild Member<br>
+- Send DM to a Guild Member<br>
+- Write as Bot<br>
+- Blacklist for Words with Warning<br>
+- Auto Role on Guild join<br>
+- CSGO Stats Command<br>
+- Get roles by command<br>
+- Join and Leave Messages for Guilds
