@@ -10,11 +10,18 @@ module.exports = class SendCommand extends Command {
       guildOnly: true,
       userPermissions: ['MANAGE_MESSAGES'],
       clientPermissions: ['MANAGE_MESSAGES'],
+      args: [
+        {
+          key: 'text',
+          prompt: ':microphone2: Was soll ich sagen?',
+          type: 'string'
+        }
+      ]
     });
   }
 
-  async run(message) {
-    const sayMessage = args.join(" ");
-    message.delete().catch(O_o => {});
-    message.channel.send(sayMessage);
-  }}
+  run(message, { text }) {
+    message.delete();
+    return message.say(text);
+  }
+};

@@ -52,7 +52,7 @@ module.exports = class BotStatusCommand extends Command {
     const StatusEmbed = new Discord.MessageEmbed()
       .setThumbnail(this.client.user.displayAvatarURL())
       .setTitle(`Status von ${this.client.user.username}`)
-      .setColor(0x7415E8)
+      .setColor('RED')
       .addField(`Ramverbrauch`, `${Math.round(used * 100) / 100}MB`, true)
       .addField(
         `Läuft seit`,

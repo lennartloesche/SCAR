@@ -1,4 +1,6 @@
 const { Command } = require('discord.js-commando');
+const Discord = require('discord.js');
+const config = require('../../config.json');
 
 module.exports = class MsgCommand extends Command {
   constructor(client) {
@@ -13,7 +15,9 @@ module.exports = class MsgCommand extends Command {
     });
   }
 
-  async run(message) {
+    async run(message) {
+    let args = message.content.slice(config.prefix.length).split(' ');
+    let cont = args.shift().toLowerCase();
     let dUser =
     message.guild.member(message.mentions.users.first()) ||
     message.guild.members.cache.get(args[0]);
