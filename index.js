@@ -1,10 +1,10 @@
 const { CommandoClient } = require('discord.js-commando');
-const { Structures, MessageEmbed, MessageAttachment } = require('discord.js');
+const { Structures } = require('discord.js');
 const Discord = require('discord.js');
 const path = require('path');
 const { FILTER_LIST, prefix, token } = require('./config.json');
 const db = require('quick.db');
-const fetch = require('node-fetch');
+const config = require('./config.json')
 
 Structures.extend('Guild', function(Guild) {
   class MusicGuild extends Guild {
@@ -74,14 +74,14 @@ setInterval(() => {
 client.on('ready', () => {
   console.log(' ')
   console.log('┌──────────────────────────────────── Login ─────────────────────────────────────────┐')
-  console.log(`│ > Eingeloggt als ${client.user.tag}!                                                      │`);
+  console.log(`│ > Eingeloggt als ${client.user.tag}!                                                 │`);
   console.log('├──────────────────────────────────── Anzahl ────────────────────────────────────────┤')
   console.log(`│ > Aktiv auf ${client.guilds.cache.size} Servern!                                                             │`)
   console.log('│──────────────────────────────────── Server ────────────────────────────────────────│')
   let content = "";
   let s = "";
     client.guilds.cache.forEach((guild) => {
-    let spaces = 85 - (`│ > ${guild.name} member's ${guild.memberCount}`).length
+    let spaces = 85 - (`│ > ${guild.name} | ${guild.memberCount} Mitglieder`).length
     s += 1
     if(s > Number(client.guilds.cache.size)-2){
       content += `\n│`
@@ -89,7 +89,7 @@ client.on('ready', () => {
     } else {
       content += '│'
     }
-    content += ` > ${guild.name} member's ${guild.memberCount}`
+    content += ` > ${guild.name} | ${guild.memberCount} Mitglieder`
 
     for (i = 0; i < spaces; i++) { 
       content += ' '
@@ -101,73 +101,20 @@ client.on('ready', () => {
   console.log(' ')
 }
 )
-
 // ❯ Word Blacklist
 
-const client2 = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"]});
-client2.on('message', message => {
+client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
     message.delete()
     var embed = new Discord.MessageEmbed()
-      .setTitle(`${client2.user.username} • Chatguard`)
+      .setTitle(`${client.user.username} • Chatguard`)
       .setDescription(`Dieses Wort darfst du nicht benutzen!`)
       .setTimestamp(message.createdAt)
-      .setFooter(client2.user.username, client2.user.displayAvatarURL())
+      .setFooter(client.user.username, client.user.displayAvatarURL())
       .setColor("#c72810");
-    message.channel.send(embed);
+    message.channel.send(embed).then(m => m.delete({timeout: 10000}));
   }
 })
-
-// ❯ Join / Leave Message
-client2.on("guildMemberAdd", member => {
-  var willkommenschannel = config.willkommenschannel
-  const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
-  var embed = new Discord.MessageEmbed()
-  .setDescription(` **${member}** hat den Server betreten`)
-  .setColor("#c72810")
-  .setTimestamp()
-  .setFooter(client2.user.username, member.user.displayAvatarURL())
-  welcomeChannel.send(embed)
-  var role = member.guild.roles.cache.find(role => role.name == "𝕊ℂ𝔸ℝ » Spieler")
-  member.roles.add(role);
-})
-client2.on("guildMemberRemove", member => {
-  var willkommenschannel = config.willkommenschannel
-  const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
-  var embed = new Discord.MessageEmbed()
-  .setDescription(` **${member.user.tag}** hat den Server verlassen`)
-  .setColor("#c72810")
-  .setTimestamp()
-  .setFooter(client2.user.username, member.user.displayAvatarURL())
-  welcomeChannel.send(embed)
-})
-
-// ❯ Member Count
-client2.on('ready', () =>{
-  var counterchannelid = config.counterchannelid
-  var counterrole = config.counterroleid
-  let myGuild = client2.guilds.cache.get(`${counterrole}`)
-  let membercount = myGuild.memberCount;
-  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
-  membercountchannel.setName('Mitglieder: ' + membercount)
-})
-client2.on('guildMemberAdd', member => {
-  var counterchannelid = config.counterchannelid
-  var counterrole = config.counterroleid
-  let myGuild = client2.guilds.cache.get(`${counterrole}`)
-  let membercount = myGuild.memberCount;
-  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
-  membercountchannel.setName('Mitglieder: ' + membercount)
-})
-client2.on('guildMemberRemove', member => {
-  var counterchannelid = config.counterchannelid
-  var counterrole = config.counterroleid
-  let myGuild = client2.guilds.cache.get(`${counterrole}`)
-  let membercount = myGuild.memberCount;
-  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
-  membercountchannel.setName('Mitglieder: ' + membercount)
-})
-
 
 client.on('voiceStateUpdate', async (___, newState) => {
   if (
@@ -189,5 +136,55 @@ client.on('voiceStateUpdate', async (___, newState) => {
     newState.setSelfDeaf(true);
   }
 });
+
+// ❯ Join / Leave Message
+client.on("guildMemberAdd", member => {
+  var willkommenschannel = config.willkommenschannel
+  const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
+  var embed = new Discord.MessageEmbed()
+  .setDescription(` **${member}** hat den Server betreten`)
+  .setColor("#c72810")
+  .setTimestamp()
+  .setFooter(client.user.username, member.user.displayAvatarURL())
+  welcomeChannel.send(embed)
+  var role = member.guild.roles.cache.find(role => role.name == "𝕊ℂ𝔸ℝ » Spieler")
+  member.roles.add(role);
+})
+client.on("guildMemberRemove", member => {
+  var willkommenschannel = config.willkommenschannel
+  const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
+  var embed = new Discord.MessageEmbed()
+  .setDescription(` **${member.user.tag}** hat den Server verlassen`)
+  .setColor("#c72810")
+  .setTimestamp()
+  .setFooter(client.user.username, member.user.displayAvatarURL())
+  welcomeChannel.send(embed)
+})
+
+// ❯ Member Count
+client.on('ready', () =>{
+  var counterchannelid = config.counterchannelid
+  var counterrole = config.counterroleid
+  let myGuild = client.guilds.cache.get(`${counterrole}`)
+  let membercount = myGuild.memberCount;
+  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
+  membercountchannel.setName('Mitglieder: ' + membercount)
+})
+client.on('guildMemberAdd', member => {
+  var counterchannelid = config.counterchannelid
+  var counterrole = config.counterroleid
+  let myGuild = client.guilds.cache.get(`${counterrole}`)
+  let membercount = myGuild.memberCount;
+  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
+  membercountchannel.setName('Mitglieder: ' + membercount)
+})
+client.on('guildMemberRemove', member => {
+  var counterchannelid = config.counterchannelid
+  var counterrole = config.counterroleid
+  let myGuild = client.guilds.cache.get(`${counterrole}`)
+  let membercount = myGuild.memberCount;
+  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
+  membercountchannel.setName('Mitglieder: ' + membercount)
+})
 
 client.login(token);

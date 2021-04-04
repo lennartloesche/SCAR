@@ -260,6 +260,7 @@ module.exports = class PlayCommand extends Command {
               highWaterMark: 1 << 25
             })
           )
+
           .on('start', function() {
             message.guild.musicData.songDispatcher = dispatcher;
             if (!db.get(`${message.guild.id}.serverSettings.volume`))
