@@ -31,10 +31,23 @@ module.exports = class MuteCommand extends Command {
 		const mutedRole = message.guild.roles.cache.find(
 		  role => role.name === 'Kanal » Mute'
 		);
-		if (!mutedRole)
-		  return message.channel.send(
-			':x: Keine "Kanal » Mute" Rolle gefunden. Bitte erstelle eine und versuche es erneut.'
-		  );
+		if(!mutedRole){
+			try{
+				mutedRole = await message.guild.roles.create({
+				name: "Kanal » Mute",
+				color: "#c72810",
+				permissions:[]
+			  })
+			  message.guild.channels.cache.forEach(async (channel) => {
+				await channel.overwritePermissions(mutedRole, {
+				  SEND_MESSAGES: false,
+				  ADD_REACTIONS: false
+				});
+			  });
+			}catch(e){
+			  console.log(e.stack);
+			}
+		  }
 		const user = userToMute;
 		if (!user)
 		  return message.channel.send(':x: Bitte nenne eine Person.');
