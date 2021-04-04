@@ -1,11 +1,57 @@
-// ❯ Import Packages
-const Discord = require("discord.js");
-const ms = require("ms");
+const { CommandoClient } = require('discord.js-commando');
+const { Structures, MessageEmbed, MessageAttachment } = require('discord.js');
+const Discord = require('discord.js');
+const path = require('path');
+const { FILTER_LIST, prefix, token } = require('./config.json');
+const db = require('quick.db');
 const fetch = require('node-fetch');
-const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"]});
 
-// ❯ Verbindung zur Config
-const config = require("./config.json");
+Structures.extend('Guild', function(Guild) {
+  class MusicGuild extends Guild {
+    constructor(client, data) {
+      super(client, data);
+      this.musicData = {
+        queue: [],
+        isPlaying: false,
+        nowPlaying: null,
+        songDispatcher: null,
+        skipTimer: false, // only skip if user used leave command
+        loopSong: false,
+        loopQueue: false,
+        volume: 1
+      };
+      this.triviaData = {
+        isTriviaRunning: false,
+        wasTriviaEndCalled: false,
+        triviaQueue: [],
+        triviaScore: new Map()
+      };
+    }
+  }
+  return MusicGuild;
+});
+
+const client = new CommandoClient({
+  commandPrefix: prefix,
+	owner: '137259014986792960',
+});
+
+client.registry
+  .registerDefaultTypes()
+  .registerGroups([
+    ['scar', ':gear: Serverbefehle:'],
+    ['csgostats', ':gear: CSGOStats:'],
+    ['musik', ':notes: Musikbefehle:'],
+    ['rollen', ':notes: Rollenbefehle:'],
+    ['utility', ':loud_sound: Zusätzliche Befehle:']
+  ])
+  .registerDefaultGroups()
+  .registerDefaultCommands({
+    eval: false,
+    prefix: false,
+    commandState: false
+  })
+  .registerCommandsIn(path.join(__dirname, 'commands'));
 
 // ❯ Rich Presence/RPC
 setInterval(() => {
@@ -22,493 +68,126 @@ setInterval(() => {
   );
 }, 15000);
 
-// ❯ Online Konsole
-client.on('ready', async () => {
-console.log(`❯ Bot gestartet als ${client.user.username}`)
+// ❯ Bot ist online
+
+
+client.on('ready', () => {
+  console.log(' ')
+  console.log('┌──────────────────────────────────── Login ─────────────────────────────────────────┐')
+  console.log(`│ > Eingeloggt als ${client.user.tag}!                                                      │`);
+  console.log('├──────────────────────────────────── Anzahl ────────────────────────────────────────┤')
+  console.log(`│ > Aktiv auf ${client.guilds.cache.size} Servern!                                                             │`)
+  console.log('│──────────────────────────────────── Server ────────────────────────────────────────│')
+  let content = "";
+  let s = "";
+    client.guilds.cache.forEach((guild) => {
+    let spaces = 85 - (`│ > ${guild.name} member's ${guild.memberCount}`).length
+    s += 1
+    if(s > Number(client.guilds.cache.size)-2){
+      content += `\n│`
+
+    } else {
+      content += '│'
+    }
+    content += ` > ${guild.name} member's ${guild.memberCount}`
+
+    for (i = 0; i < spaces; i++) { 
+      content += ' '
+    }
+          content += '│'
+  })
+  console.log(content)
+  console.log('└────────────────────────────────────────────────────────────────────────────────────┘	')
+  console.log(' ')
+}
+)
+
+// ❯ Word Blacklist
+
+const client2 = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"]});
+client2.on('message', message => {
+  if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
+    message.delete()
+    var embed = new Discord.MessageEmbed()
+      .setTitle(`${client2.user.username} • Chatguard`)
+      .setDescription(`Dieses Wort darfst du nicht benutzen!`)
+      .setTimestamp(message.createdAt)
+      .setFooter(client2.user.username, client2.user.displayAvatarURL())
+      .setColor("#c72810");
+    message.channel.send(embed);
+  }
 })
 
 // ❯ Join / Leave Message
-client.on("guildMemberAdd", member => {
+client2.on("guildMemberAdd", member => {
   var willkommenschannel = config.willkommenschannel
   const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
   var embed = new Discord.MessageEmbed()
   .setDescription(` **${member}** hat den Server betreten`)
   .setColor("#c72810")
   .setTimestamp()
-  .setFooter(client.user.username, member.user.displayAvatarURL())
+  .setFooter(client2.user.username, member.user.displayAvatarURL())
   welcomeChannel.send(embed)
   var role = member.guild.roles.cache.find(role => role.name == "𝕊ℂ𝔸ℝ » Spieler")
   member.roles.add(role);
 })
-client.on("guildMemberRemove", member => {
+client2.on("guildMemberRemove", member => {
   var willkommenschannel = config.willkommenschannel
   const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
   var embed = new Discord.MessageEmbed()
   .setDescription(` **${member.user.tag}** hat den Server verlassen`)
   .setColor("#c72810")
   .setTimestamp()
-  .setFooter(client.user.username, member.user.displayAvatarURL())
+  .setFooter(client2.user.username, member.user.displayAvatarURL())
   welcomeChannel.send(embed)
 })
 
 // ❯ Member Count
-client.on('ready', () =>{
+client2.on('ready', () =>{
   var counterchannelid = config.counterchannelid
   var counterrole = config.counterroleid
-  let myGuild = client.guilds.cache.get(`${counterrole}`)
+  let myGuild = client2.guilds.cache.get(`${counterrole}`)
   let membercount = myGuild.memberCount;
   const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
   membercountchannel.setName('Mitglieder: ' + membercount)
 })
-client.on('guildMemberAdd', member => {
+client2.on('guildMemberAdd', member => {
   var counterchannelid = config.counterchannelid
   var counterrole = config.counterroleid
-  let myGuild = client.guilds.cache.get(`${counterrole}`)
+  let myGuild = client2.guilds.cache.get(`${counterrole}`)
   let membercount = myGuild.memberCount;
   const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
   membercountchannel.setName('Mitglieder: ' + membercount)
 })
-client.on('guildMemberRemove', member => {
+client2.on('guildMemberRemove', member => {
   var counterchannelid = config.counterchannelid
   var counterrole = config.counterroleid
-  let myGuild = client.guilds.cache.get(`${counterrole}`)
+  let myGuild = client2.guilds.cache.get(`${counterrole}`)
   let membercount = myGuild.memberCount;
   const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
   membercountchannel.setName('Mitglieder: ' + membercount)
 })
 
-// ❯ Word Blacklist
-client.on('message', message => {
-  if(config.FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
-    message.delete()
-    var embed = new Discord.MessageEmbed()
-      .setTitle(`${client.user.username} • Chatguard`)
-      .setDescription(`Dieses Wort darfst du nicht benutzen!`)
-      .setTimestamp(message.createdAt)
-      .setFooter(client.user.username, client.user.displayAvatarURL())
-      .setColor("#c72810");
-    message.channel.send(embed);
+
+client.on('voiceStateUpdate', async (___, newState) => {
+  if (
+    newState.member.user.bot &&
+    !newState.channelID &&
+    newState.guild.musicData.songDispatcher &&
+    newState.member.user.id == client.user.id
+  ) {
+    newState.guild.musicData.queue.length = 0;
+    newState.guild.musicData.songDispatcher.end();
+    return;
   }
-})
-
-// ❯ Prefix
-client.on("message", async message => {
-    if (message.author.bot) return;
-    if (message.content.indexOf(config.prefix) !== 0) return;
-    const args = message.content
-      .slice(config.prefix.length)
-      .trim()
-      .split(/ +/g);
-      const command = args.shift().toLowerCase();      
-      var prefix = "+";
-
-// ❯ Help
-if (command == "help") {
-var embed = new Discord.MessageEmbed()
-  .setTitle(`${client.user.username} • Help`)
-  .addFields(
-    { name: '`+send <Message>`', value: 'Sendet eine Nachricht als Bot'},
-    { name: '`+csgostats <SteamID>`', value: 'CSGO Statistiken einer Person'},
-    { name: '`+msg <@Member> <Message>`', value: 'Schreibt einer Person Privat Nachrichten'},
-    { name: '`+clear <1-99>`', value: 'Löscht Nachrichten' },
-    { name: '`+warn <@Member> <Grund>`', value: 'Verwarnt eine Person'},
-    { name: '`+kick <@Member>`', value: 'Kickt eine Person'},
-    { name: '`+ban <@Member> <Grund>`', value: 'Bannt eine Person'},
-    { name: '`+mute <@Member> <Zeit | 1s = 1 Sekunde | 1m = 1 Minute | 1h = 1 Stunde>`', value: 'Muted eine Person'},
-    { name: '`+unmute <@Member>`', value: 'Unmutet eine Person'})
-  .setTimestamp(message.createdAt)
-  .setFooter(client.user.username, client.user.displayAvatarURL())
-  .setColor("#c72810");
-message.channel.send(embed);
-}
-
-// ❯ Send
-if (command === "send") {
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Berechtigungen ✘**')
-  .setColor("#c72810");
-  if (!message.member.permissions.has("MANAGE_MESSAGES")) return message.channel.send(embed);
-  const sayMessage = args.join(" ");
-  message.delete().catch(O_o => {});
-  message.channel.send(sayMessage);
-}
-
-// ❯ Private Message
-if (command === "msg") {
-  let dUser =
-    message.guild.member(message.mentions.users.first()) ||
-    message.guild.members.cache.get(args[0]);
-
-    var embed = new Discord.MessageEmbed()
-    .setDescription('**❯ Fehlender Tag! | Vewende +msg @Name (Grund) ✘**')
-    .setColor("#c72810");
-    if (!dUser) return message.channel.send(embed);
-
-    var embed = new Discord.MessageEmbed()
-    .setDescription('**❯ Fehlende Berechtigungen ✘**')
-    .setColor("#c72810");
-    if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(embed);
-    let dMessage = args.join(" ").slice(22);
-
-    var embed = new Discord.MessageEmbed()
-    .setDescription('**❯ Fehlende Nachricht ✘**')
-    .setColor("#c72810");
-    if (dMessage.length < 1)
-    return message.channel.send(embed);
-
-    dUser.send(`${dMessage}`);
-
-    var embed = new Discord.MessageEmbed()
-    .setDescription('**❯ Erfolgreich gesendet ✓**')
-    .setColor("#c72810");
-    message.channel.send(embed).then(m => m.delete({timeout: 2000}))
-    message.delete();
-}
-
-// ❯ Clear
-if (command == "clear") {
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Berechtigungen ✘**')
-  .setColor("#c72810");
-  if (!message.member.permissions.has("MANAGE_MESSAGES")) return message.channel.send(embed);
-  let deleteAmount;
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Nummer ✘**')
-  .setColor("#c72810");
-  if (isNaN(args[0]) || parseInt(args[0]) <= 0) { return message.channel.send(embed); }
-  if (parseInt(args[0]) > 100) {
-    return
-  } 
-  else {
-    deleteAmount = parseInt(args[0]);
+  if (
+    newState.member.user.bot &&
+    newState.channelID &&
+    newState.member.user.id == client.user.id &&
+    !newState.selfDeaf
+  ) {
+    newState.setSelfDeaf(true);
   }
-  var embed = new Discord.MessageEmbed()
-  .setDescription(`**❯ Erfolgreich ${deleteAmount} Nachrichten gelöscht ✓**`)
-  .setColor("#c72810");
-  message.channel.bulkDelete(deleteAmount + 1, true);
-  await message.channel.send(embed).then(m => m.delete({timeout: 2000}))
-}
+});
 
-// ❯ Warn
-if (command == "warn") {   
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Berechtigungen ✘**')
-  .setColor("#c72810");
-  if (!message.member.permissions.has("MUTE_MEMBERS")) return message.channel.send(embed);
-    let mentioned = message.mentions.users.first(); 
-    if(!mentioned) return message.channel.send(""); 
-    let reason = args.slice(1).join(' ') 
-    var warningEmbed = new Discord.MessageEmbed()
-    .setColor('#c72810')
-    .setTitle("Du wurdest verwarnt!")
-    .addFields({ name: 'Grund', value: reason })
-    .setTimestamp(message.createdAt)
-    .setFooter(client.user.username, client.user.displayAvatarURL())          
-    mentioned.send(warningEmbed);
-    var embed = new Discord.MessageEmbed()
-    .setDescription('**❯ Erfolgreich verwarnt ✓**')
-    .setColor("Green");
-    message.channel.send(embed);
-    message.delete();
-}
-
-// ❯ Kick & Ban
-if(command === 'kick'){
-  var embed1 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Berechtigungen ✘**')
-  .setColor("#c72810");
-  if (!message.member.permissions.has("KICK_MEMBERS")) return message.channel.send(embed1);
-
-  var embed2 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlender Tag! | Vewende +kick @Name (Grund) ✘**')
-  .setColor("#c72810");
-  let toKick = message.mentions.members.first();
-
-  var embed3 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlender Grund ✘**')
-  .setColor("#c72810");
-  let reason = args.slice(1).join(" ");
-
-  var embed6 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlender Tag! | Vewende +kick @Name (Grund) ✘**')
-  .setColor("#c72810");
-  if(!args[0]) return message.channel.send(embed6);
-  if(!toKick) return message.channel.send(embed2);
-  if(!reason) return message.channel.send(embed3);
-
-  var embed4 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Berechtigungen ✘**')
-  .setColor("#c72810");
-  if(!toKick.kickable){
-    return message.channel.send(embed4);
-  }
-
-  var embed5 = new Discord.MessageEmbed()
-  .setDescription('**❯ Erfolgreich gekickt ✓**')
-  .setColor("#c72810");
-
-  if(toKick.kickable){
-    message.channel.send(embed5);
-    toKick.kick();
-  }
-}
-
-if(command === 'ban'){
-  var embed1 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Berechtigungen ✘**')
-  .setColor("#c72810");
-  if (!message.member.permissions.has("BAN_MEMBERS")) return message.channel.send(embed1);
-
-  var embed2 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlender Tag! | Vewende +ban @Name (Grund) ✘**')
-  .setColor("#c72810");
-  let toBan = message.mentions.members.first();
-
-  var embed3 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlender Grund ✘**')
-  .setColor("#c72810");
-  let reason = args.slice(1).join(" ");
-
-  var embed4 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlender Tag! | Vewende +ban @Name (Grund) ✘**')
-  .setColor("#c72810");
-  if(!args[0]) return message.channel.send(embed4);
-  if(!toBan) return message.channel.send(embed2);
-  if(!reason) return message.channel.send(embed3);
-
-  var embed5 = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Berechtigungen ✘**')
-  .setColor("#c72810");
-
-  if(!toBan.bannable){
-      return message.channel.send(embed5);
-   }
-
-   var embed6 = new Discord.MessageEmbed()
-   .setDescription('**❯ Erfolgreich gebannt ✓**')
-   .setColor("#c72810");
-
-  if(toBan.bannable){
-    message.channel.send(embed6);
-    toBan.ban();
-  }
-}
-
-// ❯ Mute & Unmute
-if (command == "mute") {
-  let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.cache.get(args[0]));
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende UID ✘**')
-  .setColor("#c72810");
-  if(!tomute) return message.channel.send(embed);
-
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Berechtigungen ✘**')
-  .setColor("#c72810");
-  if(tomute.hasPermission("MUTE_MEMBERS")) return message.channel.send(embed);
-  let muterole = message.guild.roles.cache.find(muterole => muterole.name === "Kanal » Mute");
-  
-  if(!muterole){
-    try{
-      muterole = await message.guild.roles.create({
-        name: "Kanal » Mute",
-        color: "#c72810",
-        permissions:[]
-      })
-      message.guild.channels.cache.forEach(async (channel) => {
-        await channel.overwritePermissions(muterole, {
-          SEND_MESSAGES: false,
-          ADD_REACTIONS: false
-        });
-      });
-    }catch(e){
-      console.log(e.stack);
-    }
-  }
-
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Zeit ✘**')
-  .setColor("#c72810");
-  let mutetime = args[1];
-  if(!mutetime) return message.channel.send(embed);
-
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Erfolgreich gemutet ✓**')
-  .setColor("#c72810");
-  await(tomute.roles.add(muterole.id));
-  message.channel.send(embed);
-
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Erfolgreich unmuted ✓**')
-  .setColor("#008000");
-  setTimeout(function(){
-  tomute.roles.remove(muterole.id);
-  message.channel.send(embed).then(m => m.delete({timeout: 2000}))},ms(mutetime));
-}
-
-if (command == "unmute") {
-  let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.cache.get(args[0]));
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende UID ✘**')
-  .setColor("#c72810");
-  if(!tomute) return message.channel.send(embed);
-
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Fehlende Berechtigungen ✘**')
-  .setColor("#c72810");
-  if(tomute.hasPermission("MUTE_MEMBERS")) return message.channel.send(embed);
-  let muterole = message.guild.roles.cache.find(muterole => muterole.name === "Kanal » Mute");
-
-  var embed = new Discord.MessageEmbed()
-  .setDescription('**❯ Erfolgreich unmuted ✓**')
-  .setColor("#008000");
-  tomute.roles.remove(muterole.id);
-    message.channel.send(embed);
-}
-
-// ❯ CSGO
-if (command == "csgo") {
-  var csgo = config.csgo
-  let role = message.guild.roles.cache.find(role => role.name === `${csgo}`);
-  let member = message.member
-
-  if(message.member.roles.cache.some(role => role.name === `${csgo}`)) {
-    member.roles.remove(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${csgo} REMOVED ✘**`)
-    .setColor("RED");
-    message.channel.send(embed);  
-  }
-  else {
-    member.roles.add(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${csgo} ADDED ✓**`)
-    .setColor("GREEN");
-    message.channel.send(embed);
-  }
-}
-
-// ❯ LOL
-if (command == "lol") {
-  var lol = config.lol
-  let role = message.guild.roles.cache.find(role => role.name === `${lol}`);
-  let member = message.member
-
-  if(message.member.roles.cache.some(role => role.name === `${lol}`)) {
-    member.roles.remove(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${lol} REMOVED ✘**`)
-    .setColor("RED");
-    message.channel.send(embed);  
-  }
-  else {
-    member.roles.add(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${lol} ADDED ✓**`)
-    .setColor("GREEN");
-    message.channel.send(embed);
-  }
-}
-
-// ❯ Rocket League
-if (command == "rl") {
-  var rl = config.rl
-  let role = message.guild.roles.cache.find(role => role.name === `${rl}`);
-  let member = message.member
-
-  if(message.member.roles.cache.some(role => role.name === `${rl}`)) {
-    member.roles.remove(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${rl} REMOVED ✘**`)
-    .setColor("RED");
-    message.channel.send(embed);  
-  }
-  else {
-    member.roles.add(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${rl} ADDED ✓**`)
-    .setColor("GREEN");
-    message.channel.send(embed);
-  }
-}
-
-// ❯ Valorant
-if (command == "valorant") {
-  var valorant = config.valorant
-  let role = message.guild.roles.cache.find(role => role.name === `${valorant}`);
-  let member = message.member
-
-  if(message.member.roles.cache.some(role => role.name === `${valorant}`)) {
-    member.roles.remove(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${valorant} REMOVED ✘**`)
-    .setColor("RED");
-    message.channel.send(embed);  
-  }
-  else {
-    member.roles.add(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${valorant} ADDED ✓**`)
-    .setColor("GREEN");
-    message.channel.send(embed);
-  }
-}
-
-// ❯ Rainbow
-if (command == "r6") {
-  var r6 = config.r6
-  let role = message.guild.roles.cache.find(role => role.name === `${r6}`);
-  let member = message.member
-
-  if(message.member.roles.cache.some(role => role.name === `${r6}`)) {
-    member.roles.remove(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${r6} REMOVED ✘**`)
-    .setColor("RED");
-    message.channel.send(embed);  
-  }
-  else {
-    member.roles.add(role).catch(console.error);
-    var embed = new Discord.MessageEmbed()
-    .setDescription(`**❯ ${r6} ADDED ✓**`)
-    .setColor("GREEN");
-    message.channel.send(embed);
-  }
-}
-
-// ❯ CSGO Statistiken
-if (command == "csgostats") {
-  const Spieler = args[0];
-  const url = `https://public-api.tracker.gg/v2/csgo/standard/profile/steam/${Spieler}`;
-  fetch(url, {
-    method: 'GET',
-    headers: {
-      'TRN-Api-Key': `c15d418d-fc9f-4906-9c45-da17425d6125`,
-      'Accept': 'application/json',
-      'Accept-Encoding': 'gzip'
-    }
-  })
-  .then(res => res.json())
-  .then(data => {
-  const result = new Array();
-  for(let i in data.data.segments[0].stats) {
-    const selectedStat = data.data.segments[0].stats[i];
-    result.push({
-      name: selectedStat.displayName,
-      value: selectedStat.displayValue,
-      inline: true
-    });
-  }
-  const embed = new Discord.MessageEmbed()
-    .setAuthor(`${client.user.username} • Statistiken für ${Spieler}`, client.user.displayAvatarURL())
-    .setTimestamp(message.createdAt)
-    .setFooter(`${client.user.username}`, client.user.displayAvatarURL())
-    .setColor("#4680FC")
-    .addFields(result);
-  message.channel.send(embed);
-  })
-  .catch(e=> console.log('API Error: ', e));
-}
-
-})
-client.login(config.token);
+client.login(token);
