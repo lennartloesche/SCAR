@@ -33,7 +33,7 @@ module.exports = class AvatarCommand extends Command {
       - [webp](${user.displayAvatarURL({ format: 'webp', dynamic: true, size: 4096 })})
       `)
       .setImage(user.displayAvatarURL({ format: 'png', dynamic: true, size: 4096 }))
-      .setColor(0x7415E8)
+      .setColor('RED')
       .setFooter(`Angefragt von: ${message.author.tag}`, `${message.author.displayAvatarURL()}`)
       .setTimestamp()
     message.embed(embed);
