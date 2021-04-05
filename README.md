@@ -11,7 +11,9 @@ This Discord-Bot helps to moderate the scar Discord-Server with the following fu
 - Blacklist for Words with Warning<br>
 - Auto Role on Guild join<br>
 - CSGO Stats Command<br>
-- Get roles by command<br>
+- Get roles by Command<br>
 - Join and Leave Messages for Guilds
 - Get an random Reddit Meme
 - Play Music from Youtube
+- IP/Domain Lookup Command
+- Botstatus Command
