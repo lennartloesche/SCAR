@@ -13,3 +13,5 @@ This Discord-Bot helps to moderate the scar Discord-Server with the following fu
 - CSGO Stats Command<br>
 - Get roles by command<br>
 - Join and Leave Messages for Guilds
+- Get an random Reddit Meme
+- Play Music from Youtube
