@@ -161,30 +161,4 @@ client.on("guildMemberRemove", member => {
   welcomeChannel.send(embed)
 })
 
-// ❯ Member Count
-client.on('ready', () =>{
-  var counterchannelid = config.counterchannelid
-  var counterrole = config.counterroleid
-  let myGuild = client.guilds.cache.get(`${counterrole}`)
-  let membercount = myGuild.memberCount;
-  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
-  membercountchannel.setName('Mitglieder: ' + membercount)
-})
-client.on('guildMemberAdd', member => {
-  var counterchannelid = config.counterchannelid
-  var counterrole = config.counterroleid
-  let myGuild = client.guilds.cache.get(`${counterrole}`)
-  let membercount = myGuild.memberCount;
-  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
-  membercountchannel.setName('Mitglieder: ' + membercount)
-})
-client.on('guildMemberRemove', member => {
-  var counterchannelid = config.counterchannelid
-  var counterrole = config.counterroleid
-  let myGuild = client.guilds.cache.get(`${counterrole}`)
-  let membercount = myGuild.memberCount;
-  const membercountchannel = myGuild.channels.cache.get(`${counterchannelid}`);
-  membercountchannel.setName('Mitglieder: ' + membercount)
-})
-
 client.login(token);
