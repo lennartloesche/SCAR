@@ -101,8 +101,8 @@ client.on('ready', () => {
   console.log(' ')
 }
 )
+screen
 // ❯ Word Blacklist
-
 client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
     message.delete()
