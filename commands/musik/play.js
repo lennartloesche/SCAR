@@ -59,12 +59,12 @@ module.exports = class PlayCommand extends Command {
   async run(message, { query }) {
     // Make sure that only users present in a voice channel can use 'play'
     if (!message.member.voice.channel) {
-      message.say(':no_entry: Bitte betrete einen Sprachkanal und versuche es erneut!');
+      message.reply(':no_entry: Bitte betrete einen Sprachkanal und versuche es erneut!');
       return;
     }
     // Make sure there isn't a 'music-trivia' running
     if (message.guild.triviaData.isTriviaRunning) {
-      message.say(':x: Please try after the trivia has ended!');
+      message.reply(':x: Please try after the trivia has ended!');
       return;
     }
 
@@ -149,13 +149,13 @@ module.exports = class PlayCommand extends Command {
     if (isYouTubePlaylistURL(query)) {
       const playlist = await youtube.getPlaylist(query);
       if (!playlist)
-        return message.say(
+        return message.reply(
           ':x: Playlist ist privat oder existiert nicht!'
         );
 
       let videosArr = await playlist.getVideos();
       if (!videosArr)
-        return message.say(
+        return message.reply(
           ":x: Es gab ein Problem bei einem Song in der Playlist"
         );
 
@@ -164,7 +164,7 @@ module.exports = class PlayCommand extends Command {
       }
 
       if (message.guild.musicData.queue.length >= maxQueueLength)
-        return message.say(
+        return message.reply(
           'Die Warteschlange ist voll, bitte füge später neue Songs hinzu.'
         );
 
@@ -211,7 +211,7 @@ module.exports = class PlayCommand extends Command {
         .split(/[^0-9a-z_\-]/i)[0];
 
       const video = await youtube.getVideoByID(id).catch(function() {
-        message.say(
+        message.reply(
           ':x: Es gab ein Problem bei dem Song, den du angegeben hast!'
         );
       });
@@ -221,21 +221,21 @@ module.exports = class PlayCommand extends Command {
         video.raw.snippet.liveBroadcastContent === 'live' &&
         !playLiveStreams
       ) {
-        message.say(
+        message.reply(
           'Live streams are disabled in this server! Contact the owner'
         );
         return;
       }
 
       if (video.duration.hours !== 0 && !playVideosLongerThan1Hour) {
-        message.say(
+        message.reply(
           'Videos, die länger als 1 Stunde sind, kann ich nicht abspielen! Wenn du Songs abspielen willst, die länger als 1 Stunde sind, dann kontaktiere David.'
         );
         return;
       }
 
       if (message.guild.musicData.queue.length > maxQueueLength) {
-        message.say(
+        message.reply(
           `Die Warteschlange hat das Limit von ${maxQueueLength} erreicht, bitte warte etwas, bis du wieder Songs hinzufügst!`
         );
         return;
@@ -348,7 +348,7 @@ var playSong = (queue, message) => {
           }
         })
         .on('error', function(e) {
-          message.say(':x: Ich kann den Song nicht abspielen!');
+          message.reply(':x: Ich kann den Song nicht abspielen!');
           console.error(e);
           if (queue.length > 1) {
             queue.shift();
@@ -363,7 +363,7 @@ var playSong = (queue, message) => {
         });
     })
     .catch(function() {
-      message.say(':no_entry: Ich habe keine Berechtigung den Sprachkanal zu betreten!');
+      message.reply(':no_entry: Ich habe keine Berechtigung den Sprachkanal zu betreten!');
       message.guild.resetMusicDataOnError();
       if (message.guild.me.voice.channel) {
         message.guild.me.voice.channel.leave();
@@ -391,19 +391,19 @@ var playbackBar = data => {
 
 var searchYoutube = async (query, message, voiceChannel) => {
   const videos = await youtube.searchVideos(query, 5).catch(async function() {
-    await message.say(
+    await message.reply(
       ':x: Es gab ein Problem bei dem Song, den du angegeben hast!'
     );
     return;
   });
   if (!videos) {
-    message.say(
+    message.reply(
       `:x: Ich hatte Probleme beim Finden der Eingabe, versuche es mal spezifischer.`
     );
     return;
   }
   if (videos.length < 5) {
-    message.say(
+    message.reply(
       `:x: Ich hatte Probleme beim Finden der Eingabe, versuche es mal spezifischer.`
     );
     return;
@@ -448,7 +448,7 @@ var searchYoutube = async (query, message, voiceChannel) => {
             !playLiveStreams
           ) {
             songEmbed.delete();
-            message.say(
+            message.reply(
               'Live Streams kann ich nicht abspielen! Kontaktiere David.'
             );
             return;
@@ -456,7 +456,7 @@ var searchYoutube = async (query, message, voiceChannel) => {
 
           if (video.duration.hours !== 0 && !playVideosLongerThan1Hour) {
             songEmbed.delete();
-            message.say(
+            message.reply(
               'Videos, die länger als 1 Stunde sind, kann ich nicht abspielen! Wenn du Songs abspielen willst, die länger als 1 Stunde sind, dann kontaktiere David.'
             );
             return;
@@ -464,7 +464,7 @@ var searchYoutube = async (query, message, voiceChannel) => {
 
           if (message.guild.musicData.queue.length > maxQueueLength) {
             songEmbed.delete();
-            message.say(
+            message.reply(
               `Die Warteschlange hat das Limit von ${maxQueueLength} erreicht, bitte warte etwas, bis du wieder Songs hinzufügst`
             );
             return;
@@ -496,7 +496,7 @@ var searchYoutube = async (query, message, voiceChannel) => {
           if (songEmbed) {
             songEmbed.delete();
           }
-          message.say(
+          message.reply(
             ':x: Ein Fehler ist aufgetreten, mit der Video ID des Videos.'
           );
           return;
@@ -506,7 +506,7 @@ var searchYoutube = async (query, message, voiceChannel) => {
       if (songEmbed) {
         songEmbed.delete();
       }
-      message.say(
+      message.reply(
         ':x: Bitte versuche es erneut und gebe eine Nummer zwischen 1 und 5 an.'
       );
       return;
@@ -536,7 +536,7 @@ var interactiveEmbed = message => {
       true
     )
     .setFooter(
-      `Angefragt von ${message.guild.musicData.nowPlaying.memberDisplayName}`,
+      `Angefragt von ${message.guild.musicData.nowPlaying.memberDisplayName}!`,
       message.guild.musicData.nowPlaying.memberAvatar
     );
 
@@ -595,7 +595,7 @@ var interactiveEmbed = message => {
 
         videoEmbed
           .setDescription(songTitle + playbackBar(message.guild.musicData))
-          .setTitle(':stop_button: Gestoppt')
+          .setTitle(':stop_button: gestoppt')
           .setTimeout(100);
 
         if (message.guild.musicData.songDispatcher.paused == true) {
@@ -614,7 +614,7 @@ var interactiveEmbed = message => {
           message.guild.musicData.loopQueue = false;
           message.guild.musicData.songDispatcher.end();
         }
-        message.say(`:red_square: Channel verlassen.`);
+        message.reply(`:grey_exclamation: Verlasse den Channel.`);
       },
       // Play/Pause Button
       '⏯️': function() {
@@ -732,13 +732,13 @@ var interactiveEmbed = message => {
   }
 
   function embedTitle(message) {
-    let embedTitle = 'Aktueller Song';
+    let embedTitle = ':musical_note: Aktueller Song';
     if (message.guild.musicData.loopQueue)
-      embedTitle += ' | Warteschlange wird wiederholt';
+      embedTitle += ' :repeat: Warteschlange wird wiederholt';
     if (message.guild.musicData.loopSong)
-      embedTitle += ' wird wiederholt';
+      embedTitle += ' :repeat_one: wird wiederholt';
     if (message.guild.musicData.songDispatcher.paused)
-      embedTitle = 'Song pausiert';
+      embedTitle = ':pause_button: pausiert';
 
     return embedTitle;
   }
@@ -800,7 +800,7 @@ var constructSongObj = (video, voiceChannel, user) => {
 
 var createResultsEmbed = (namesArray, firstVideo) =>
   new MessageEmbed()
-    .setColor("#c72810")
+    .setColor('#c72810')
     .setTitle(`Suchergebnisse!`)
     .addField('Ergebnis 1', namesArray[0])
     .setURL(firstVideo.url)

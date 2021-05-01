@@ -12,7 +12,7 @@ module.exports = class CSGOStatsCommand extends Command {
 		guildOnly: false
 	  });
 	}
-	async run(message, args) {
+	async run(message, args, client) {
 		const Spieler = args[0];
 		const url = `https://public-api.tracker.gg/v2/csgo/standard/profile/steam/${Spieler}`;
 		fetch(url, {

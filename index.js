@@ -76,33 +76,13 @@ client.on('ready', () => {
   console.log('┌──────────────────────────────────── Login ─────────────────────────────────────────┐')
   console.log(`│ > Eingeloggt als ${client.user.tag}!                                                 │`);
   console.log('├──────────────────────────────────── Anzahl ────────────────────────────────────────┤')
-  console.log(`│ > Aktiv auf ${client.guilds.cache.size} Servern!                                                             │`)
-  console.log('│──────────────────────────────────── Server ────────────────────────────────────────│')
-  let content = "";
-  let s = "";
-    client.guilds.cache.forEach((guild) => {
-    let spaces = 85 - (`│ > ${guild.name} | ${guild.memberCount} Mitglieder`).length
-    s += 1
-    if(s > Number(client.guilds.cache.size)-2){
-      content += `\n│`
-
-    } else {
-      content += '│'
-    }
-    content += ` > ${guild.name} | ${guild.memberCount} Mitglieder`
-
-    for (i = 0; i < spaces; i++) { 
-      content += ' '
-    }
-          content += '│'
-  })
-  console.log(content)
+  console.log(`│ > Aktiv auf ${client.guilds.cache.size}!                                                             │`)
   console.log('└────────────────────────────────────────────────────────────────────────────────────┘	')
   console.log(' ')
 }
 )
-screen
 // ❯ Word Blacklist
+
 client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
     message.delete()
@@ -160,5 +140,28 @@ client.on("guildMemberRemove", member => {
   .setFooter(client.user.username, member.user.displayAvatarURL())
   welcomeChannel.send(embed)
 })
+
+// ❯ Sprachkanal erstellen mit Channel Join
+
+var anzahl = [];
+client.on('voiceStateUpdate', async (oldMember, newMember) => {
+    let kategorie = client.channels.cache.get('kategorie id');
+    let sprachkanal = client.channels.cache.get('channel id');
+    if (newMember.channel == sprachkanal) {
+        await newMember.guild.channels.create(`${newMember.member.displayName}s Channel`, {
+            type: 'voice', parent: kategorie, userLimit: 99
+        }).then(async channel => {
+          anzahl.push({ newID: channel.id, guild: channel.guild });
+            await newMember.setChannel(channel.id);
+        });
+    }
+    if (anzahl.length > 0) for (let i = 0; i < anzahl.length; i++) {
+        let ch = client.channels.cache.get(anzahl[i].newID);
+        if (ch.members.size === 0) {
+            await ch.delete();
+            return anzahl.splice(i, 1);
+        }
+    }
+});
 
 client.login(token);
