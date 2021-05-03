@@ -23,7 +23,7 @@ module.exports = class LockCommand extends commando.Command {
                 embed: {
                     title: `${channel.name} | ${message.guild.name}`,
                     description: `${channel} wurde bereits gesperrt!`,
-                    color: 'RED',
+                    color: '#c72810',
                     timestamp: new Date()
                 }
             })
@@ -36,7 +36,7 @@ module.exports = class LockCommand extends commando.Command {
             embed: {
                 title: `Lockdown! | ${message.guild.name}`,
                 description: `${channel} wurde gesperrt von: ${message.author.tag}`,
-                color: 'RED',
+                color: '#c72810',
                 timestamp: new Date()
             }
         })

@@ -29,7 +29,7 @@ module.exports = class MemeCommand extends Command {
         embed.setTitle(`${memeTitle}`)
         embed.setURL(`${memeUrl}`)
         embed.setImage(memeImage)
-        embed.setColor('RED')
+        embed.setColor('#c72810')
         embed.setFooter(`👍 ${memeUpvotes} 👎 ${memeDownvotes}`)
         message.channel.send(embed);
     })

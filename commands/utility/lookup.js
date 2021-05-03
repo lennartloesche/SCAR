@@ -39,7 +39,7 @@ module.exports = class LookupCommand extends Command {
       function embedResolve() {
         //embed json results
         return new MessageEmbed()
-        .setColor('RED')
+        .setColor('#c72810')
           .setAuthor(
             'IP/Hostname Informationen',
             'https://i.imgur.com/3lIiIv9.png',

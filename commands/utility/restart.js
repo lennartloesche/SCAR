@@ -13,6 +13,19 @@ module.exports = class RestartCommand extends Command {
 	  });
 	}
 
-	async run() {
-	process.exit()
+	async run(message) {
+		const stop = new Discord.MessageEmbed()
+		.setTitle(`Bot Restart!`)
+		.setDescription(`Der Bot ist in **5 Sekunden** wieder online!`)
+		.setColor(0x7415E8)
+		.setTimestamp()
+
+		if(message.author.id = "137259014986792960"){
+			try {
+			   await message.channel.send(stop).then(m => m.delete({timeout: 1000}))
+	  
+			} finally {
+			  process.exit()
+			}
+		}
 }}

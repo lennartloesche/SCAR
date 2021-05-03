@@ -46,8 +46,8 @@ module.exports = class LeaveCommand extends Command {
         message.guild.musicData.songDispatcher.end();
       }, 100);
       return message.say(
-        `:grey_exclamation: ${this.client.user.username} hat den Sprachkanal verlassen.`
-      );
+        `Ich habe den Sprachkanal verlassen.`
+      ).then(m => m.delete({timeout: 10000}));
     } else {
       message.guild.musicData.queue.length = 0;
       message.guild.musicData.skipTimer = true;
@@ -55,8 +55,8 @@ module.exports = class LeaveCommand extends Command {
       message.guild.musicData.loopQueue = false;
       message.guild.musicData.songDispatcher.end();
       return message.say(
-        `:grey_exclamation: ${this.client.user.username} hat den Sprachkanal verlassen.`
-      );
+        `Ich habe den Sprachkanal verlassen.`
+      ).then(m => m.delete({timeout: 10000}));
     }
   }
 };

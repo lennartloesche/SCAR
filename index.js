@@ -76,7 +76,7 @@ client.on('ready', () => {
   console.log('┌──────────────────────────────────── Login ─────────────────────────────────────────┐')
   console.log(`│ > Eingeloggt als ${client.user.tag}!                                                 │`);
   console.log('├──────────────────────────────────── Anzahl ────────────────────────────────────────┤')
-  console.log(`│ > Aktiv auf ${client.guilds.cache.size}!                                                             │`)
+  console.log(`│ > Aktiv auf ${client.guilds.cache.size} Server!                                                              │`)
   console.log('└────────────────────────────────────────────────────────────────────────────────────┘	')
   console.log(' ')
 }
@@ -145,13 +145,30 @@ client.on("guildMemberRemove", member => {
 
 var anzahl = [];
 client.on('voiceStateUpdate', async (oldMember, newMember) => {
-    let kategorie = client.channels.cache.get('kategorie id');
-    let sprachkanal = client.channels.cache.get('channel id');
-    if (newMember.channel == sprachkanal) {
-        await newMember.guild.channels.create(`${newMember.member.displayName}s Channel`, {
-            type: 'voice', parent: kategorie, userLimit: 99
+    let category = client.channels.cache.get('838153923797712896');
+    let voiceCH = client.channels.cache.get('838154057717645363');
+    if (newMember.channel == voiceCH) {
+        await newMember.guild.channels.create(`${newMember.member.displayName}'s Channel`, {
+            type: 'voice', parent: category, permissionOverwrites: [
+              {
+                id: '757168568315150337', // @everyone
+                deny: ['CONNECT'],
+            },
+              {
+                id: '788178021173297202', // Muted Rolle
+                deny: ['VIEW_CHANNEL', 'CONNECT', 'SPEAK', 'STREAM'],
+            },
+            {
+                id: newMember.id, // Person
+                allow: ['VIEW_CHANNEL', 'CONNECT', 'MANAGE_CHANNELS', 'MANAGE_ROLES'],
+            },
+              {
+                id: '757221755306639460', // Scar Mitglieder Rolle
+                allow: ['VIEW_CHANNEL', 'CONNECT', 'SPEAK', 'STREAM', 'PRIORITY_SPEAKER', 'MANAGE_CHANNELS']
+            },
+            ]
         }).then(async channel => {
-          anzahl.push({ newID: channel.id, guild: channel.guild });
+            anzahl.push({ newID: channel.id, guild: channel.guild });
             await newMember.setChannel(channel.id);
         });
     }

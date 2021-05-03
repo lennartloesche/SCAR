@@ -12,13 +12,13 @@ module.exports = class CSGOStatsCommand extends Command {
 		guildOnly: false
 	  });
 	}
-	async run(message, args, client) {
-		const Spieler = args[0];
+	async run(message, args) {
+		const Spieler = args;
 		const url = `https://public-api.tracker.gg/v2/csgo/standard/profile/steam/${Spieler}`;
 		fetch(url, {
 		  method: 'GET',
 		  headers: {
-			'TRN-Api-Key': `b5c4663d-a015-4105-8928-18e836e61113`,
+			'TRN-Api-Key': ``,
 			'Accept': 'application/json',
 			'Accept-Encoding': 'gzip'
 		  }
@@ -35,10 +35,10 @@ module.exports = class CSGOStatsCommand extends Command {
 		  });
 		}
 		const embed = new MessageEmbed()
-		  .setAuthor(`${client.user.username} • Statistiken für ${Spieler}`, client.user.displayAvatarURL())
+		  .setAuthor(`${this.client.user.username} • Statistiken für ${Spieler}`, this.client.user.displayAvatarURL())
 		  .setTimestamp(message.createdAt)
-		  .setFooter(`${client.user.username}`, client.user.displayAvatarURL())
-		  .setColor('#c72810')
+		  .setFooter(`${this.client.user.username}`, this.client.user.displayAvatarURL())
+		  .setColor("#c72810")
 		  .addFields(result);
 		message.channel.send(embed);
 		})

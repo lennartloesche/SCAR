@@ -52,7 +52,7 @@ module.exports = class BotStatusCommand extends Command {
     const StatusEmbed = new Discord.MessageEmbed()
       .setThumbnail(this.client.user.displayAvatarURL())
       .setTitle(`Status von ${this.client.user.username}`)
-      .setColor('RED')
+      .setColor('#c72810')
       .addField(`Ramverbrauch`, `${Math.round(used * 100) / 100}MB`, true)
       .addField(
         `Läuft seit`,
@@ -61,7 +61,6 @@ module.exports = class BotStatusCommand extends Command {
         true
       )
       .addField(`System`, `${platform} ${archInfo}`, true)
-      .addField('Ausgeführt von', this.client.owners)
 
       .addField(
         'Befehle',
@@ -70,7 +69,7 @@ module.exports = class BotStatusCommand extends Command {
       )
       .addField(
         'Server, Users',
-        `Auf ${this.client.guilds.cache.size} Servern, mit einer Gesamtsumme von ${memberCount} Usern.`
+        `Auf ${this.client.guilds.cache.size}, mit einer Summe von ${memberCount} Usern.`
       )
       .addField(
         'Dependencies',
