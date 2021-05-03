@@ -1,6 +1,6 @@
 # [SCAR System](https://discord.gg/qFmgBPg)
 SCAR System Discord Bot<br>
-This Discord-Bot helps to moderate the scar Discord-Server with the following functions:
+This Discord-Bot helps to moderate the SCAR Discord-Server with the following functions:
 <br>
 - Ban Guild Member<br>
 - Kick Guild Member<br>
@@ -9,7 +9,7 @@ This Discord-Bot helps to moderate the scar Discord-Server with the following fu
 - Send DM to a Guild Member<br>
 - Write as Bot<br>
 - Blacklist for Words with Warning<br>
-- Auto Role on Guild join<br>
+- Auto Role on Guild Join<br>
 - CSGO Stats Command<br>
 - Get roles by Command<br>
 - Join and Leave Messages for Guilds
