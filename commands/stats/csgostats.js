@@ -18,7 +18,7 @@ module.exports = class CSGOStatsCommand extends Command {
 		fetch(url, {
 		  method: 'GET',
 		  headers: {
-			'TRN-Api-Key': `c15d418d-fc9f-4906-9c45-da17425d6125`,
+			'TRN-Api-Key': `(key)`,
 			'Accept': 'application/json',
 			'Accept-Encoding': 'gzip'
 		  }
