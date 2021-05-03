@@ -40,7 +40,7 @@ client.registry
   .registerDefaultTypes()
   .registerGroups([
     ['scar', ':gear: Serverbefehle:'],
-    ['csgostats', ':gear: CSGOStats:'],
+    ['stats', ':gear: Statistiken:'],
     ['musik', ':notes: Musikbefehle:'],
     ['rollen', ':notes: Rollenbefehle:'],
     ['utility', ':loud_sound: Zusätzliche Befehle:']

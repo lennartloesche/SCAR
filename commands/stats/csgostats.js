@@ -7,7 +7,7 @@ module.exports = class CSGOStatsCommand extends Command {
 	  super(client, {
 		name: 'csgostats',
 		memberName: 'csgostats',
-		group: 'csgostats',
+		group: 'stats',
 		description: "CSGO Statistiken abrufen",
 		guildOnly: false
 	  });
@@ -18,7 +18,7 @@ module.exports = class CSGOStatsCommand extends Command {
 		fetch(url, {
 		  method: 'GET',
 		  headers: {
-			'TRN-Api-Key': ``,
+			'TRN-Api-Key': `c15d418d-fc9f-4906-9c45-da17425d6125`,
 			'Accept': 'application/json',
 			'Accept-Encoding': 'gzip'
 		  }
