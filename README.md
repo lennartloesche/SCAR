@@ -17,3 +17,4 @@ This Discord-Bot helps to moderate the scar Discord-Server with the following fu
 - Play Music from Youtube
 - IP/Domain Lookup Command
 - Botstatus Command
+- Channel Manager
