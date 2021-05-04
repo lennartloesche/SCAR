@@ -22,7 +22,7 @@ module.exports = class MuteCommand extends Command {
 			  key: 'reason',
 			  prompt: 'Nenne einen Grund?',
 			  type: 'string',
-			  default: message => `${message.author.tag} hat keinen Grund gegeben`
+			  default: `kein Grund angegeben`
 			}
 		  ]
 		});
@@ -54,11 +54,13 @@ module.exports = class MuteCommand extends Command {
 		user.roles
 		  .add(mutedRole)
 		  .then(() => {
+			message.delete();
 			const muteEmbed = new MessageEmbed()
 			  .addField('Gemutet:', user)
 			  .addField('Grund', reason)
+			  .setFooter(`Gemutet von: ${message.author.tag}`)
 			  .setColor('#c72810')
-			message.channel.send(muteEmbed);
+			message.channel.send(muteEmbed).then(m => m.delete({timeout: 120000}));
 		  })
 		  .catch(err => {
 			message.say(

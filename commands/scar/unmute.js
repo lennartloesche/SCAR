@@ -14,28 +14,22 @@ module.exports = class UnmuteCommand extends Command {
 	});
 }
 
-async run(message, { userToUnmute }) {
-  const mutedRole = message.guild.roles.cache.find(role => role.name === 'Kanal » Mute');
-  if (!mutedRole)
-    return message.channel.send(
-      ':x: Keine "Kanal » Mute" Rolle gefunden. Bitte erstelle eine und versuche es erneut.'
-    );
-  const user = userToUnmute;
-  if (!user)
-    return message.channel.send(':x: Bitte nenne eine Person.');
-  user.roles
-    .remove(mutedRole)
-    .then(() => {
-      const unmuteEmbed = new MessageEmbed()
-        .addField('Entmutet:', userToUnmute)
-        .setColor('#008000');
-      message.channel.send(unmuteEmbed);
-    })
-    .catch(err => {
-      message.say(
-        ':x: Fehler, beim entmuten der Person.'
-      );
-      return console.error(err);
-    });
-}
-};
+async run(message) {
+  let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.cache.get(args[0]));
+  var embed = new MessageEmbed()
+  .setDescription('Bitte gib eine Person an!')
+  .setColor("#c72810");
+  if(!tomute) return message.channel.send(embed).then(m => m.delete({timeout: 9000}));
+
+  var embed = new MessageEmbed()
+  .setDescription('**❯ Fehlende Berechtigungen ✘**')
+  .setColor("#c72810");
+  if(tomute.hasPermission("MUTE_MEMBERS")) return message.channel.send(embed).then(m => m.delete({timeout: 9000}));
+  let muterole = message.guild.roles.cache.find(muterole => muterole.name === "Kanal » Mute");
+
+  var embed = new MessageEmbed()
+  .setDescription('**❯ Erfolgreich entmutet ✓**')
+  .setColor("#c72810");
+  tomute.roles.remove(muterole.id);
+    message.channel.send(embed).then(m => m.delete({timeout: 9000}));
+}}
