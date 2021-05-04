@@ -10,12 +10,16 @@ module.exports = class MemeCommand extends Command {
 			memberName: 'meme',
             group: 'utility',
 			description: 'Meme von Reddit',
-      guildOnly: false
+            guildOnly: false,
+            throttling: {
+                usages: 1,
+                duration: 8
+            },        
 		});
 	}
 
     async run(message) {
-
+        message.delete();
         const embed = new Discord.MessageEmbed()
         got('https://www.reddit.com/r/ich_iel+GermanMemes+kreiswichs+dankmemes/random/.json').then(response => {
         let content = JSON.parse(response.body);
@@ -25,7 +29,6 @@ module.exports = class MemeCommand extends Command {
         let memeTitle = content[0].data.children[0].data.title;
         let memeUpvotes = content[0].data.children[0].data.ups;
         let memeDownvotes = content[0].data.children[0].data.downs;
-        let memeNumComments = content[0].data.children[0].data.num_comments;
         embed.setTitle(`${memeTitle}`)
         embed.setURL(`${memeUrl}`)
         embed.setImage(memeImage)

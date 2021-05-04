@@ -7,7 +7,7 @@ module.exports = class CSGOStatsCommand extends Command {
 	  super(client, {
 		name: 'csgostats',
 		memberName: 'csgostats',
-		group: 'stats',
+		group: 'csgostats',
 		description: "CSGO Statistiken abrufen",
 		guildOnly: false
 	  });

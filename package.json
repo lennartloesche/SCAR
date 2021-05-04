@@ -1,15 +1,4 @@
 {
-  "name": "scar-bot",
-  "version": "1.1.0",
-  "description": "Discord-Bot for the SCAR Clan",
-  "main": "index.js",
-  "scripts": {
-    "start": "node .",
-    "pretest": "eslint --ignore-path .gitignore .",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "grauerdavid",
-  "license": "ISC",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "canvacord": "^5.0.8",
@@ -33,13 +22,5 @@
     "twemoji-parser": "^13.0.0",
     "ws": "^7.4.2",
     "ytdl-core": "^4.5.0"
-  },
-  "devDependencies": {
-    "@getify/eslint-plugin-proper-arrows": "^8.0.1",
-    "@getify/eslint-plugin-proper-ternary": "^3.0.1",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^5.16.0",
-    "nodemon": "^1.19.4",
-    "prettier": "^1.19.1"
-  }
+}
 }

@@ -3,8 +3,12 @@ const { Structures } = require('discord.js');
 const Discord = require('discord.js');
 const path = require('path');
 const { FILTER_LIST, prefix, token } = require('./config.json');
-const db = require('quick.db');
 const config = require('./config.json')
+
+var moment = require('moment')
+
+
+/*---------------------------------------------------------------------------------------------------------------------*/
 
 Structures.extend('Guild', function(Guild) {
   class MusicGuild extends Guild {
@@ -15,7 +19,7 @@ Structures.extend('Guild', function(Guild) {
         isPlaying: false,
         nowPlaying: null,
         songDispatcher: null,
-        skipTimer: false, // only skip if user used leave command
+        skipTimer: false,
         loopSong: false,
         loopQueue: false,
         volume: 1
@@ -27,9 +31,19 @@ Structures.extend('Guild', function(Guild) {
         triviaScore: new Map()
       };
     }
+    resetMusicDataOnError() {
+      this.musicData.queue.length = 0;
+      this.musicData.isPlaying = false;
+      this.musicData.nowPlaying = null;
+      this.musicData.loopSong = false;
+      this.musicData.loopQueue = false;
+      this.musicData.songDispatcher = null;
   }
+}
   return MusicGuild;
 });
+
+/*---------------------------------------------------------------------------------------------------------------------*/
 
 const client = new CommandoClient({
   commandPrefix: prefix,
@@ -39,11 +53,11 @@ const client = new CommandoClient({
 client.registry
   .registerDefaultTypes()
   .registerGroups([
-    ['scar', ':gear: Serverbefehle:'],
-    ['stats', ':gear: Statistiken:'],
-    ['musik', ':notes: Musikbefehle:'],
-    ['rollen', ':notes: Rollenbefehle:'],
-    ['utility', ':loud_sound: Zusätzliche Befehle:']
+    ['scar', 'Serverbefehle'],
+    ['stats', 'Statistiken'],
+    ['musik', 'Musikbefehle'],
+    ['rollen', 'Rollenbefehle'],
+    ['utility', 'Zusätzliche Befehle']
   ])
   .registerDefaultGroups()
   .registerDefaultCommands({
@@ -53,7 +67,31 @@ client.registry
   })
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
-// ❯ Rich Presence/RPC
+  client.on('voiceStateUpdate', async (___, newState) => {
+    if (
+      newState.member.user.bot &&
+      !newState.channelID &&
+      newState.guild.musicData.songDispatcher &&
+      newState.member.user.id == client.user.id
+    ) {
+      newState.guild.musicData.queue.length = 0;
+      newState.guild.musicData.songDispatcher.end();
+      return;
+    }
+    if (
+      newState.member.user.bot &&
+      newState.channelID &&
+      newState.member.user.id == client.user.id &&
+      !newState.selfDeaf
+    ) {
+      newState.setSelfDeaf(true);
+    }
+  });
+
+/*---------------------------------------------------------------------------------------------------------------------*/
+
+// Rich Presence/RPC
+
 setInterval(() => {
   const activities = [
       `+help | ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} Mitglieder`
@@ -68,8 +106,9 @@ setInterval(() => {
   );
 }, 15000);
 
-// ❯ Bot ist online
+/*---------------------------------------------------------------------------------------------------------------------*/
 
+// Bot ist online
 
 client.on('ready', () => {
   console.log(' ')
@@ -81,7 +120,10 @@ client.on('ready', () => {
   console.log(' ')
 }
 )
-// ❯ Word Blacklist
+
+/*---------------------------------------------------------------------------------------------------------------------*/
+
+// Word Blacklist
 
 client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
@@ -92,32 +134,13 @@ client.on('message', message => {
       .setTimestamp(message.createdAt)
       .setFooter(client.user.username, client.user.displayAvatarURL())
       .setColor("#c72810");
-    message.channel.send(embed).then(m => m.delete({timeout: 10000}));
+    message.channel.send(embed).then(m => m.delete({timeout: 4000}));
   }
 })
 
-client.on('voiceStateUpdate', async (___, newState) => {
-  if (
-    newState.member.user.bot &&
-    !newState.channelID &&
-    newState.guild.musicData.songDispatcher &&
-    newState.member.user.id == client.user.id
-  ) {
-    newState.guild.musicData.queue.length = 0;
-    newState.guild.musicData.songDispatcher.end();
-    return;
-  }
-  if (
-    newState.member.user.bot &&
-    newState.channelID &&
-    newState.member.user.id == client.user.id &&
-    !newState.selfDeaf
-  ) {
-    newState.setSelfDeaf(true);
-  }
-});
+/*---------------------------------------------------------------------------------------------------------------------*/
 
-// ❯ Join / Leave Message
+// Join / Leave Message
 client.on("guildMemberAdd", member => {
   var willkommenschannel = config.willkommenschannel
   const welcomeChannel = member.guild.channels.cache.find(channel => channel.name === `${willkommenschannel}`);
@@ -141,7 +164,50 @@ client.on("guildMemberRemove", member => {
   welcomeChannel.send(embed)
 })
 
-// ❯ Sprachkanal erstellen mit Channel Join
+/*---------------------------------------------------------------------------------------------------------------------*/
+
+// Alt Account Benachrichtiger
+client.on('guildMemberAdd', async (member) => {
+  if (Date.now() - member.user.createdAt < 1000*60*60*24*1) {
+      const logChan = "816696898509471764"
+      let channel = client.channels.cache.get(logChan);
+
+      const embed = new MessageEmbed()
+          .setColor('#c72810')
+          .setTitle(`${member.user}`)
+          .setDescription(`⚠ **Möglicher Alt Account**
+          Account erstellt: ${moment(member.user.createdAt).format('lll')}**
+          *Bitte nachschauen, ob der Account wie ein gebannter User aussieht! (Profilbild, Name, usw.)*`)
+          .setFooter(`UserID: ${member.id}`)
+          .setTimestamp();
+      
+          channel.send(embed)
+          msg = await channel.send('Soll ich ihn kicken?')
+          msg.react('👍').then(() => msg.react('👎'))
+
+      // Checking for reactionss
+          msg.awaitReactions((reaction, user) => (reaction.emoji.name == '👍' || reaction.emoji.name == '👎') && (user.id !== client.user.id) , { max: 1, time: 600000, errors: ['time'] })
+              .then(collected => {
+                  const reaction = collected.first();
+                  if (reaction.emoji.name === '👍') {
+                      member.kick()
+                      return msg.edit('Person wurde gekickt!')
+                  } else if (reaction.emoji.name === '👎') {
+                     return msg.edit('Okay, die Person kann bleiben!')
+                  }
+              })
+              .catch(collected => {
+                  channel.send('Ihr hattet 10 Minuten um darauf zu reagieren.. jetzt müsst ihr ihn manuell kicken!')
+              })
+              .catch(error => {
+                  console.log(error)
+              });
+  }
+})
+
+/*---------------------------------------------------------------------------------------------------------------------*/
+
+// Sprachkanal erstellen mit Channel Join
 
 var anzahl = [];
 client.on('voiceStateUpdate', async (oldMember, newMember) => {
@@ -180,5 +246,7 @@ client.on('voiceStateUpdate', async (oldMember, newMember) => {
         }
     }
 });
+
+/*---------------------------------------------------------------------------------------------------------------------*/
 
 client.login(token);

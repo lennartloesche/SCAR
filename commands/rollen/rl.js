@@ -22,14 +22,14 @@ module.exports = class RLCommand extends Command {
 	  
 		if(message.member.roles.cache.some(role => role.name === `${rl}`)) {
 		  member.roles.remove(role)
-		  var embed = new Discord.MessageEmbed()
+		  var embed = new MessageEmbed()
 		  .setDescription(`**❯ ${rl} entfernt ✘**`)
 		  .setColor("RED");
 		  message.channel.send(embed).then(m => m.delete({timeout: 10000}))
 		}
 		else {
 		  member.roles.add(role)
-		  var embed = new Discord.MessageEmbed()
+		  var embed = new MessageEmbed()
 		  .setDescription(`**❯ ${rl} hinzugefügt ✓**`)
 		  .setColor("GREEN");
 		  message.channel.send(embed).then(m => m.delete({timeout: 10000}))

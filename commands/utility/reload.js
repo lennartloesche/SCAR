@@ -57,6 +57,7 @@ module.exports = class ReloadCommandCommand extends Command {
 			msg.delete()
 			await msg.say(`\`${cmdOrGrp.name}\` neugestartet`).then(m => m.delete({timeout: 5000}));
 		} else {
+			msg.delete()
 			await msg.say(
 				`Alle Befehle von \`${cmdOrGrp.name}\` neugestartet.`
 			).then(m => m.delete({timeout: 5000}));
