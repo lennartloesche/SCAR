@@ -809,13 +809,13 @@ var interactiveEmbed = message => {
   }
 
   function embedTitle(message) {
-    let embedTitle = ':musical_note: Aktueller Song';
+    let embedTitle = 'Aktueller Song';
     if (message.guild.musicData.loopQueue)
       embedTitle += ' :repeat: Warteschlange wird wiederholt';
     if (message.guild.musicData.loopSong)
-      embedTitle += ' :repeat_one: wird wiederholt';
+      embedTitle += ' wird wiederholt';
     if (message.guild.musicData.songDispatcher.paused)
-      embedTitle = ':pause_button: pausiert';
+      embedTitle = ' pausiert';
 
     return embedTitle;
   }
