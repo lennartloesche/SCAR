@@ -3,7 +3,7 @@ const { Structures } = require('discord.js');
 const Discord = require('discord.js');
 const fs = require('fs')
 const path = require('path');
-const { FILTER_LIST, prefix, token } = require('./config.json');
+const { FILTER_LIST, prefix, token, ADMINS } = require('./config.json');
 const config = require('./config.json')
 
 var moment = require('moment')
@@ -128,13 +128,13 @@ client.on('ready', () => {
 
 client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
-    if (message.user.id === "398101340322136075" || "deineiddavid und ja") return;
+    if (ADMINS.some(admin => message.user.id(admin))) return;
     var log = new Discord.MessageEmbed()
       .setAuthor(`${message.author.tag}`, message.author.displayAvatarURL())
       .setDescription(`${message.content}`)
       .setTimestamp(message.createdAt)
       .setFooter(`${client.user.username} Chatguard-Log`)
-      .setColor("#2a2a2a");
+      .setColor("#FF0000");
     client.channels.fetch('844921548313591848').then(channel => channel.send(log));
     message.delete()
     var embed = new Discord.MessageEmbed()
@@ -142,7 +142,7 @@ client.on('message', message => {
       .setDescription(`Dieses Wort darfst du nicht benutzen!`)
       .setTimestamp(message.createdAt)
       .setFooter(client.user.username, client.user.displayAvatarURL())
-      .setColor("#c72810");
+      .setColor("#FF0000");
     message.channel.send(embed).then(m => m.delete({timeout: 4000}));
   }
 
