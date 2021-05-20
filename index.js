@@ -127,6 +127,13 @@ client.on('ready', () => {
 
 client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
+    var log = new Discord.MessageEmbed()
+      .setAuthor(`${message.author.tag}`, message.author.displayAvatarURL())
+      .setDescription(`${message.content}`)
+      .setTimestamp(message.createdAt)
+      .setFooter(`${client.user.username} Chatguard-Log`)
+      .setColor("#2a2a2a");
+    client.channels.fetch('844921548313591848').then(channel => channel.send(log));
     message.delete()
     var embed = new Discord.MessageEmbed()
       .setTitle(`${client.user.username} • Chatguard`)
@@ -136,6 +143,27 @@ client.on('message', message => {
       .setColor("#c72810");
     message.channel.send(embed).then(m => m.delete({timeout: 4000}));
   }
+
+    //Log DMS
+		if (message.channel.type == 'dm') {
+			
+			//TimeStamp
+			const timestamp = new Date()
+
+			//File Log
+			fs.appendFile(`./debug.log`, `timestamp: ${timestamp};\t Author: ${message.author.tag};\t Content: ${message.content};\n`, function (err) {
+				if (err) throw err;
+			});
+
+			//Discord Log
+			var embed = new Discord.MessageEmbed()
+				.setAuthor(`${message.author.tag}`, message.author.displayAvatarURL())
+				.setDescription(`${message.content}`)
+				.setTimestamp(message.createdAt)
+				.setFooter(`${client.user.username} DM-Log`)
+        .setColor("#2a2a2a");
+			client.channels.fetch('844921548313591848').then(channel => channel.send(embed));
+		}
 })
 
 /*---------------------------------------------------------------------------------------------------------------------*/
