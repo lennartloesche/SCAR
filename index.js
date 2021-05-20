@@ -125,7 +125,9 @@ client.on('ready', () => {
 
 client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
-    if (message.author.id === "398101340322136075" || "137259014986792960" || "212265016160681984" || "274529832975466497") return;
+    const admins = [ '398101340322136075', '137259014986792960', '212265016160681984', '274529832975466497' ]
+    if(admins.includes(message.author.id)) return;
+    else
     var log = new Discord.MessageEmbed()
       .setAuthor(`${message.author.tag}`, message.author.displayAvatarURL())
       .setDescription(`${message.content}`)
@@ -133,7 +135,7 @@ client.on('message', message => {
       .setFooter(`${client.user.username} Chatguard-Log`)
       .setColor("#FF0000");
     client.channels.fetch(config.chatguardlogs).then(channel => channel.send(log));
-    message.delete()
+    message.delete();
     var embed = new Discord.MessageEmbed()
       .setTitle(`${client.user.username} • Chatguard`)
       .setDescription(`Bitte achte auf deine Wortwahl!`)
@@ -159,6 +161,7 @@ client.on('message', message => {
       .setTimestamp(message.createdAt)
       .setFooter(`${client.user.username} DM-Log`)
       .setColor("#2a2a2a");
+      if(message.author.id === client.user.id) return;
     client.channels.fetch(config.dmlogs).then(channel => channel.send(embed));
   }
 })
