@@ -163,7 +163,7 @@ client.on('message', message => {
       .setFooter(`${client.user.username} DM-Log`)
       .setColor("#2a2a2a");
       if(message.author.id === client.user.id) return;
-    client.channels.fetch('844921548313591848').then(channel => channel.send(embed));
+    client.channels.fetch('844927577130401855').then(channel => channel.send(embed));
   }
 })
 
