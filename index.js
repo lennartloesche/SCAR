@@ -1,6 +1,7 @@
 const { CommandoClient } = require('discord.js-commando');
 const { Structures } = require('discord.js');
 const Discord = require('discord.js');
+const fs = require('fs')
 const path = require('path');
 const { FILTER_LIST, prefix, token } = require('./config.json');
 const config = require('./config.json')
@@ -144,26 +145,26 @@ client.on('message', message => {
     message.channel.send(embed).then(m => m.delete({timeout: 4000}));
   }
 
-    //Log DMS
-		if (message.channel.type == 'dm') {
-			
-			//TimeStamp
-			const timestamp = new Date()
+  //Log DMS
+  if (message.channel.type == 'dm') {
+    
+    //TimeStamp
+    const timestamp = new Date()
 
-			//File Log
-			fs.appendFile(`./debug.log`, `timestamp: ${timestamp};\t Author: ${message.author.tag};\t Content: ${message.content};\n`, function (err) {
-				if (err) throw err;
-			});
+    //File Log
+    fs.appendFile(`./debug.log`, `timestamp: ${timestamp};\t Author: ${message.author.tag};\t Content: ${message.content};\n`, function (err) {
+      if (err) throw err;
+    });
 
-			//Discord Log
-			var embed = new Discord.MessageEmbed()
-				.setAuthor(`${message.author.tag}`, message.author.displayAvatarURL())
-				.setDescription(`${message.content}`)
-				.setTimestamp(message.createdAt)
-				.setFooter(`${client.user.username} DM-Log`)
-        .setColor("#2a2a2a");
-			client.channels.fetch('844921548313591848').then(channel => channel.send(embed));
-		}
+    //Discord Log
+    var embed = new Discord.MessageEmbed()
+      .setAuthor(`${message.author.tag}`, message.author.displayAvatarURL())
+      .setDescription(`${message.content}`)
+      .setTimestamp(message.createdAt)
+      .setFooter(`${client.user.username} DM-Log`)
+      .setColor("#2a2a2a");
+    client.channels.fetch('844921548313591848').then(channel => channel.send(embed));
+  }
 })
 
 /*---------------------------------------------------------------------------------------------------------------------*/
