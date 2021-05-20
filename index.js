@@ -3,7 +3,7 @@ const { Structures } = require('discord.js');
 const Discord = require('discord.js');
 const fs = require('fs')
 const path = require('path');
-const { FILTER_LIST, prefix, token, ADMINS } = require('./config.json');
+const { FILTER_LIST, prefix, token } = require('./config.json');
 const config = require('./config.json')
 
 var moment = require('moment')
@@ -128,7 +128,7 @@ client.on('ready', () => {
 
 client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
-    if (ADMINS.some(admin => message.user.id(admin))) return;
+    if (message.author.id === "398101340322136075" || "137259014986792960" || "212265016160681984" || "274529832975466497") return;
     var log = new Discord.MessageEmbed()
       .setAuthor(`${message.author.tag}`, message.author.displayAvatarURL())
       .setDescription(`${message.content}`)
@@ -148,8 +148,6 @@ client.on('message', message => {
 
   //Log DMS
   if (message.channel.type == 'dm') {
-    
-    //TimeStamp
     const timestamp = new Date()
 
     //File Log
@@ -164,6 +162,7 @@ client.on('message', message => {
       .setTimestamp(message.createdAt)
       .setFooter(`${client.user.username} DM-Log`)
       .setColor("#2a2a2a");
+      if(message.author.id === client.user.id) return;
     client.channels.fetch('844921548313591848').then(channel => channel.send(embed));
   }
 })
