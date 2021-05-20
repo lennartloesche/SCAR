@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const { MessageEmbed } = require('discord.js');
 
 module.exports = class HelpCommand extends Command {
 	constructor(client) {
@@ -15,11 +14,6 @@ module.exports = class HelpCommand extends Command {
 
 	async run(message) {
 		message.delete()
-		const embed = new MessageEmbed()
-		.setTitle(`Hilfe`)
-		.setDescription(`Befehle können nachgeschaut werden auf: https://grauerdavid.de/scarcommands/`)
-		.setColor("#c72810")
-		.setTimestamp()
-		message.say(embed).then(m => m.delete({timeout: 20000}))
+		message.say('Befehle können nachgeschaut werden auf: https://grauerdavid.de/scarcommands/').then(m => m.delete({timeout: 30000}))
 	}
 };

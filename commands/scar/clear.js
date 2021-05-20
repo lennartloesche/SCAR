@@ -31,11 +31,4 @@ module.exports = class ClearCommand extends Command {
       .setFooter(`Ausgeführt von: ${message.author.tag}`, `${message.author.displayAvatarURL()}`)
       .setTimestamp()
       message.say(embed).then(m => m.delete({timeout: 9000}))
-      .catch(e => {
-        console.error(e);
-        return message.say(
-          ':x: Fehler, beim löschen der Nachrichten!'
-        );
-      });
-  }
-};
+      }};

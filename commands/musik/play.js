@@ -187,7 +187,7 @@ module.exports = class PlayCommand extends Command {
                   message.member.voice.channel
                 );
                 break;
-              // 4: Cancel
+              // 4: abbruch
               case '4':
                 break;
             }
@@ -486,13 +486,13 @@ var searchYoutube = async (query, message, voiceChannel) => {
         .replace(/&#39;/g, "'")}](${videos[i].shortURL})`
     );
   }
-  vidNameArr.push('cancel');
+  vidNameArr.push('abbruch');
   const embed = createResultsEmbed(vidNameArr, videos[0]);
   var songEmbed = await message.channel.send({ embed });
   message.channel
     .awaitMessages(
       function(msg) {
-        return (msg.content > 0 && msg.content < 6) || msg.content === 'cancel';
+        return (msg.content > 0 && msg.content < 6) || msg.content === 'abbruch';
       },
       {
         max: 1,
@@ -502,7 +502,7 @@ var searchYoutube = async (query, message, voiceChannel) => {
     )
     .then(function(response) {
       const videoIndex = parseInt(response.first().content);
-      if (response.first().content === 'cancel') {
+      if (response.first().content === 'abbruch') {
         songEmbed.delete();
         return;
       }
@@ -811,7 +811,7 @@ var interactiveEmbed = message => {
   function embedTitle(message) {
     let embedTitle = 'Aktueller Song';
     if (message.guild.musicData.loopQueue)
-      embedTitle += ' :repeat: Warteschlange wird wiederholt';
+      embedTitle = 'Warteschlange wird wiederholt';
     if (message.guild.musicData.loopSong)
       embedTitle += ' wird wiederholt';
     if (message.guild.musicData.songDispatcher.paused)
@@ -877,7 +877,7 @@ var constructSongObj = (video, voiceChannel, user) => {
 
 var createResultsEmbed = (namesArray, firstVideo) =>
   new MessageEmbed()
-    .setColor('#ff0000')
+    .setColor('#c72810')
     .setTitle(`Suchergebnisse`)
     .addField('Ergebnis 1', namesArray[0])
     .setURL(firstVideo.url)
@@ -887,6 +887,6 @@ var createResultsEmbed = (namesArray, firstVideo) =>
     .addField('Ergebnis 5', namesArray[4])
     .setThumbnail(firstVideo.thumbnails.high.url)
     .setFooter('Suche aus, indem du eine Nummer von 1 bis 5 schreibst')
-    .addField(':x: Cancel', 'um abzubrechen ');
+    .addField(':x: abbruch', 'um abzubrechen ');
 
 module.exports.createResponse = interactiveEmbed;

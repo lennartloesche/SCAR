@@ -87,7 +87,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
     const enabledEmbed = new MessageEmbed()
       .setAuthor(
         message.member.guild.name + ' Einstellungen',
-        `https://static.twitchcdn.net/assets/favicon-32-d6025c14e900565d6177.png`,
+        `https://www.pikpng.com/pngl/b/45-455766_twitch-community-twitch-logo-png-transparent-clipart.png`,
         'https://twitch.tv/' + user.data[0].display_name
       )
       .setTitle(`:white_check_mark: Twitch Announcer aktiviert!`)
@@ -104,7 +104,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
     const disabledEmbed = new MessageEmbed()
       .setAuthor(
         message.member.guild.name + ' Einstellungen',
-        `https://static.twitchcdn.net/assets/favicon-32-d6025c14e900565d6177.png`,
+        `https://www.pikpng.com/pngl/b/45-455766_twitch-community-twitch-logo-png-transparent-clipart.png`,
         'https://twitch.tv/' + user.data[0].display_name
       )
       .setTitle(`:x: Twitch Announcer deaktiviert!`)
@@ -240,7 +240,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
             .setColor('#c72810')
             .setFooter(
               'Stream gestartet',
-              'https://static.twitchcdn.net/assets/favicon-32-d6025c14e900565d6177.png' // Official icon link from Twitch.tv
+              'https://www.pikpng.com/pngl/b/45-455766_twitch-community-twitch-logo-png-transparent-clipart.png' // Official icon link from Twitch.tv
             )
             .setImage(
               streamInfo.data[0].thumbnail_url
@@ -254,8 +254,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
           //Online Send
           try {
             if (DBInfo.botSay.toLowerCase() != 'none') {
-              await announcedChannel.send(DBInfo.botSay),
-                await announcedChannel.send(onlineEmbed);
+              await announcedChannel.send(onlineEmbed);
               embedID = announcedChannel.lastMessage.id;
             } else {
               await announcedChannel.send(onlineEmbed);
@@ -284,7 +283,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
             .setTimestamp()
             .setFooter(
               'Stream beendet',
-              'https://static.twitchcdn.net/assets/favicon-32-d6025c14e900565d6177.png'
+              'https://www.pikpng.com/pngl/b/45-455766_twitch-community-twitch-logo-png-transparent-clipart.png'
             )
             .setThumbnail('attachment://box_art.png');
 
