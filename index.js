@@ -3,11 +3,9 @@ const { Structures } = require('discord.js');
 const Discord = require('discord.js');
 const fs = require('fs')
 const path = require('path');
-const { FILTER_LIST, prefix, token, ADMINS } = require('./config.json');
+const { FILTER_LIST, prefix, token } = require('./config.json');
 const config = require('./config.json')
-
 var moment = require('moment')
-
 
 /*---------------------------------------------------------------------------------------------------------------------*/
 
@@ -119,8 +117,7 @@ client.on('ready', () => {
   console.log(`│ > Aktiv auf ${client.guilds.cache.size} Server!                                                              │`)
   console.log('└────────────────────────────────────────────────────────────────────────────────────┘	')
   console.log(' ')
-}
-)
+})
 
 /*---------------------------------------------------------------------------------------------------------------------*/
 
@@ -128,28 +125,26 @@ client.on('ready', () => {
 
 client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
-    if (ADMINS.some(admin => message.user.id(admin))) return;
+    if (message.author.id === "398101340322136075" || "137259014986792960" || "212265016160681984" || "274529832975466497") return;
     var log = new Discord.MessageEmbed()
       .setAuthor(`${message.author.tag}`, message.author.displayAvatarURL())
       .setDescription(`${message.content}`)
       .setTimestamp(message.createdAt)
       .setFooter(`${client.user.username} Chatguard-Log`)
       .setColor("#FF0000");
-    client.channels.fetch('844921548313591848').then(channel => channel.send(log));
+    client.channels.fetch(config.chatguardlogs).then(channel => channel.send(log));
     message.delete()
     var embed = new Discord.MessageEmbed()
       .setTitle(`${client.user.username} • Chatguard`)
-      .setDescription(`Dieses Wort darfst du nicht benutzen!`)
+      .setDescription(`Bitte achte auf deine Wortwahl!`)
       .setTimestamp(message.createdAt)
       .setFooter(client.user.username, client.user.displayAvatarURL())
       .setColor("#FF0000");
     message.channel.send(embed).then(m => m.delete({timeout: 4000}));
   }
 
-  //Log DMS
+  //Log DMs
   if (message.channel.type == 'dm') {
-    
-    //TimeStamp
     const timestamp = new Date()
 
     //File Log
@@ -164,7 +159,7 @@ client.on('message', message => {
       .setTimestamp(message.createdAt)
       .setFooter(`${client.user.username} DM-Log`)
       .setColor("#2a2a2a");
-    client.channels.fetch('844921548313591848').then(channel => channel.send(embed));
+    client.channels.fetch(config.dmlogs).then(channel => channel.send(embed));
   }
 })
 
@@ -199,39 +194,39 @@ client.on("guildMemberRemove", member => {
 // Alt Account Benachrichtiger
 client.on('guildMemberAdd', async (member) => {
   if (Date.now() - member.user.createdAt < 1000*60*60*24*1) {
-      const logChan = "816696898509471764"
-      let channel = client.channels.cache.get(logChan);
+    const logChan = "816696898509471764"
+    let channel = client.channels.cache.get(logChan);
 
-      const embed = new MessageEmbed()
-          .setColor('#c72810')
-          .setTitle(`${member.user}`)
-          .setDescription(`⚠ **Möglicher Alt Account**
-          Account erstellt: ${moment(member.user.createdAt).format('lll')}**
-          *Bitte nachschauen, ob der Account wie ein gebannter User aussieht! (Profilbild, Name, usw.)*`)
-          .setFooter(`UserID: ${member.id}`)
-          .setTimestamp();
-      
-          channel.send(embed)
-          msg = await channel.send('Soll ich ihn kicken?')
-          msg.react('👍').then(() => msg.react('👎'))
+    const embed = new MessageEmbed()
+      .setColor('#c72810')
+      .setTitle(`${member.user}`)
+      .setDescription(`⚠ **Möglicher Alt Account**
+      Account erstellt: ${moment(member.user.createdAt).format('lll')}**
+      *Bitte nachschauen, ob der Account wie ein gebannter User aussieht! (Profilbild, Name, usw.)*`)
+      .setFooter(`UserID: ${member.id}`)
+      .setTimestamp();
+  
+      channel.send(embed)
+      msg = await channel.send('Soll ich ihn kicken?')
+      msg.react('👍').then(() => msg.react('👎'))
 
-      // Checking for reactionss
-          msg.awaitReactions((reaction, user) => (reaction.emoji.name == '👍' || reaction.emoji.name == '👎') && (user.id !== client.user.id) , { max: 1, time: 600000, errors: ['time'] })
-              .then(collected => {
-                  const reaction = collected.first();
-                  if (reaction.emoji.name === '👍') {
-                      member.kick()
-                      return msg.edit('Person wurde gekickt!')
-                  } else if (reaction.emoji.name === '👎') {
-                     return msg.edit('Okay, die Person kann bleiben!')
-                  }
-              })
-              .catch(collected => {
-                  channel.send('Ihr hattet 10 Minuten um darauf zu reagieren.. jetzt müsst ihr ihn manuell kicken!')
-              })
-              .catch(error => {
-                  console.log(error)
-              });
+    // Checking for reactionss
+    msg.awaitReactions((reaction, user) => (reaction.emoji.name == '👍' || reaction.emoji.name == '👎') && (user.id !== client.user.id) , { max: 1, time: 600000, errors: ['time'] })
+      .then(collected => {
+          const reaction = collected.first();
+          if (reaction.emoji.name === '👍') {
+              member.kick()
+              return msg.edit('Person wurde gekickt!')
+          } else if (reaction.emoji.name === '👎') {
+              return msg.edit('Okay, die Person kann bleiben!')
+          }
+      })
+      .catch(collected => {
+          channel.send('Ihr hattet 10 Minuten um darauf zu reagieren.. jetzt müsst ihr ihn manuell kicken!')
+      })
+      .catch(error => {
+          console.log(error)
+      });
   }
 })
 
