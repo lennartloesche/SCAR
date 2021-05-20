@@ -128,6 +128,7 @@ client.on('ready', () => {
 
 client.on('message', message => {
   if(FILTER_LIST.some(word => message.content.toLowerCase().includes(word))){
+    if (message.user.id === "398101340322136075" || "deineiddavid und ja") return;
     var log = new Discord.MessageEmbed()
       .setAuthor(`${message.author.tag}`, message.author.displayAvatarURL())
       .setDescription(`${message.content}`)
