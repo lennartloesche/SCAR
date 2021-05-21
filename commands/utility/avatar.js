@@ -8,7 +8,7 @@ module.exports = class AvatarCommand extends Command {
       aliases: ['profile-picture', 'profile-pic', 'pfp', 'av'],
       memberName: 'avatar',
       group: 'utility',
-      description: "User Avatar bekommen",
+      description: 'User Avatar bekommen',
       guildOnly: true,
       args: [
         {
@@ -26,16 +26,35 @@ module.exports = class AvatarCommand extends Command {
   run(message, { user }) {
     const embed = new MessageEmbed()
       .setTitle(user.tag)
-      .setDescription(`
+      .setDescription(
+        `
       Format:
-      - [png](${user.displayAvatarURL({ format: 'png', dynamic: true, size: 4096 })})
-      - [jpg](${user.displayAvatarURL({ format: 'jpg', dynamic: true, size: 4096 })})
-      - [webp](${user.displayAvatarURL({ format: 'webp', dynamic: true, size: 4096 })})
-      `)
-      .setImage(user.displayAvatarURL({ format: 'png', dynamic: true, size: 4096 }))
+      - [png](${user.displayAvatarURL({
+        format: 'png',
+        dynamic: true,
+        size: 4096
+      })})
+      - [jpg](${user.displayAvatarURL({
+        format: 'jpg',
+        dynamic: true,
+        size: 4096
+      })})
+      - [webp](${user.displayAvatarURL({
+        format: 'webp',
+        dynamic: true,
+        size: 4096
+      })})
+      `
+      )
+      .setImage(
+        user.displayAvatarURL({ format: 'png', dynamic: true, size: 4096 })
+      )
       .setColor('#c72810')
-      .setFooter(`Angefragt von ${message.author.tag}`, `${message.author.displayAvatarURL()}`)
-      .setTimestamp()
+      .setFooter(
+        `Angefragt von ${message.author.tag}`,
+        `${message.author.displayAvatarURL()}`
+      )
+      .setTimestamp();
     message.embed(embed);
     return;
   }

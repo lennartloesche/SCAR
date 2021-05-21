@@ -46,17 +46,19 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
       args: [
         {
           key: 'textRaw',
-          prompt: "Wie heißt der Streamer?",
+          prompt: 'Wie heißt der Streamer?',
           type: 'string'
         },
         {
           key: 'streamChannel',
-          prompt: 'In welchen Channel willst du, dass ich die Nachricht schreibe? (Nur den Namen ohne #)',
+          prompt:
+            'In welchen Channel willst du, dass ich die Nachricht schreibe? (Nur den Namen ohne #)',
           type: 'string'
         },
         {
           key: 'timer',
-          prompt: '(Optional) Wie oft möchtest du, das ich das checke? (1 bis 60 Minuten)',
+          prompt:
+            '(Optional) Wie oft möchtest du, das ich das checke? (1 bis 60 Minuten)',
           type: 'integer',
           default: 2,
           validate: function validate(timer) {
@@ -82,15 +84,17 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
     try {
       await message.delete();
     } catch {
-      message.say(
-        `:no_entry: Ich benötige die Berechtigung, Nachrichten zu verwalten`
-      ).then(m => m.delete({timeout: 15000}));
+      message
+        .say(
+          `:no_entry: Ich benötige die Berechtigung, Nachrichten zu verwalten`
+        )
+        .then((m) => m.delete({ timeout: 15000 }));
       return;
     }
 
     // Search by name
     let announcedChannel = message.guild.channels.cache.find(
-      channel => channel.name == streamChannel
+      (channel) => channel.name == streamChannel
     );
 
     // Search by id
@@ -98,7 +102,9 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
       announcedChannel = message.guild.channels.cache.get(streamChannel);
 
     if (!announcedChannel) {
-      message.say(':x: ' + streamChannel + ' wurde nicht gefunden').then(m => m.delete({timeout: 15000}));
+      message
+        .say(':x: ' + streamChannel + ' wurde nicht gefunden')
+        .then((m) => m.delete({ timeout: 15000 }));
       return;
     }
 
@@ -113,7 +119,7 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
         scope
       );
     } catch (e) {
-      message.say(':x: ' + e).then(m => m.delete({timeout: 15000}));
+      message.say(':x: ' + e).then((m) => m.delete({ timeout: 15000 }));
       return;
     }
 
@@ -124,7 +130,7 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
         textFiltered
       );
     } catch (e) {
-      message.say(':x: ' + e).then(m => m.delete({timeout: 15000}));
+      message.say(':x: ' + e).then((m) => m.delete({ timeout: 15000 }));
       return;
     }
 
@@ -149,7 +155,9 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
       )
       .setURL('https://twitch.tv/' + user.data[0].display_name)
       .setTitle(`Einstellungen wurden gespeichert!`)
-      .setDescription('Vergiss nicht ```+twitch-announcer enable``` auszuführen, um es zu starten!')
+      .setDescription(
+        'Vergiss nicht ```+twitch-announcer enable``` auszuführen, um es zu starten!'
+      )
       .setColor('#c72810')
       .setThumbnail(user.data[0].profile_image_url)
       .addField('Vorabnachricht', sayMsg)
@@ -157,9 +165,9 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
       .addField(`Channel`, announcedChannel.name, true)
       .addField('👥 Zuschauer:', user.data[0].view_count, true)
       .setFooter(message.member.displayName, message.author.displayAvatarURL())
-        .setTimestamp();
+      .setTimestamp();
 
     //Send Reponse
-    message.say(embed)
+    message.say(embed);
   }
 };

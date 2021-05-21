@@ -28,13 +28,11 @@ module.exports = class TwitchAnnouncerCommand extends Command {
         `${prefix}twitch-announcer disable`,
         `${prefix}ta check` + '```'
       ],
-      description:
-        'Enable, Disable oder Check den Twitch Announcer',
+      description: 'Enable, Disable oder Check den Twitch Announcer',
       args: [
         {
           key: 'textRaw',
-          prompt:
-            '**Enable**, **Disable** oder **Check**?',
+          prompt: '**Enable**, **Disable** oder **Check**?',
           type: 'string',
           oneOf: ['enable', 'disable', 'check']
         }
@@ -54,7 +52,11 @@ module.exports = class TwitchAnnouncerCommand extends Command {
 
     //Error Missing DB
     if (DBInfo == undefined)
-      return message.say('Es wurden keine Einstellungen gefunden! Bitte führe ```+twitch-announcer-settings``` aus.').then(m => m.delete({timeout: 15000}));
+      return message
+        .say(
+          'Es wurden keine Einstellungen gefunden! Bitte führe ```+twitch-announcer-settings``` aus.'
+        )
+        .then((m) => m.delete({ timeout: 15000 }));
 
     //Get Twitch Ready for Response Embeds
     const scope = 'user:read:email';
@@ -119,32 +121,35 @@ module.exports = class TwitchAnnouncerCommand extends Command {
 
     //Check embed trigger
     if (textFiltered == 'check') {
-      if (currentMsgStatus == 'disable') message.say(disabledEmbed).then(m => m.delete({timeout: 15000}));
+      if (currentMsgStatus == 'disable')
+        message.say(disabledEmbed).then((m) => m.delete({ timeout: 15000 }));
       else {
-        return message.say(enabledEmbed).then(m => m.delete({timeout: 15000}));
+        return message
+          .say(enabledEmbed)
+          .then((m) => m.delete({ timeout: 15000 }));
       }
       return;
     }
     //Disable Set
     if (textFiltered == 'disable') {
       currentMsgStatus = 'disable';
-      message.say(disabledEmbed).then(m => m.delete({timeout: 15000}));
+      message.say(disabledEmbed).then((m) => m.delete({ timeout: 15000 }));
     }
 
     //Enable Set
     if (textFiltered == 'enable') {
       currentMsgStatus = 'enable';
-      message.say(enabledEmbed).then(m => m.delete({timeout: 15000}));
+      message.say(enabledEmbed).then((m) => m.delete({ timeout: 15000 }));
 
       //Ticker Section (Loop)
-      var Ticker = setInterval(async function() {
+      var Ticker = setInterval(async function () {
         if (currentMsgStatus == 'disable') {
           clearInterval(Ticker);
           return;
         }
 
         let announcedChannel = message.guild.channels.cache.find(
-          channel => channel.id == DBInfo.channelID
+          (channel) => channel.id == DBInfo.channelID
         );
         try {
           access_token = await TwitchAPI.getToken(
@@ -240,16 +245,16 @@ module.exports = class TwitchAnnouncerCommand extends Command {
             .setColor('#c72810')
             .setFooter(
               'Stream gestartet',
-              'https://www.pikpng.com/pngl/b/45-455766_twitch-community-twitch-logo-png-transparent-clipart.png' // Official icon link from Twitch.tv
+              'https://www.pikpng.com/pngl/b/45-455766_twitch-community-twitch-logo-png-transparent-clipart.png'
             )
             .setImage(
               streamInfo.data[0].thumbnail_url
                 .replace(/{width}x{height}/g, '1920x1080')
-                .concat('?r=' + Math.floor(Math.random() * 10000 + 1)) // to ensure the image updates when refreshed
+                .concat('?r=' + Math.floor(Math.random() * 10000 + 1))
             )
             .setTimestamp(streamInfo.data[0].started_at)
             .attachFiles(attachment)
-            .setThumbnail('attachment://box_art.png')
+            .setThumbnail('attachment://box_art.png');
 
           //Online Send
           try {
@@ -261,7 +266,9 @@ module.exports = class TwitchAnnouncerCommand extends Command {
               embedID = announcedChannel.lastMessage.id;
             }
           } catch (error) {
-            message.say(':x: Ich konnte keine Nachricht in den Textkanal schreiben').then(m => m.delete({timeout: 15000}));
+            message
+              .say(':x: Ich konnte keine Nachricht in den Textkanal schreiben')
+              .then((m) => m.delete({ timeout: 15000 }));
             console.log(error);
             clearInterval(Ticker);
             return;
@@ -278,7 +285,9 @@ module.exports = class TwitchAnnouncerCommand extends Command {
               user.data[0].profile_image_url,
               'https://twitch.tv/' + user.data[0].display_name
             )
-            .setTitle(user.data[0].display_name + ' hat ' + currentGame + ' gestreamt')
+            .setTitle(
+              user.data[0].display_name + ' hat ' + currentGame + ' gestreamt'
+            )
             .setColor('#c72810')
             .setTimestamp()
             .setFooter(
@@ -292,7 +301,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
             offlineEmbed
               .addField('Profilbeschreibung:', user.data[0].description)
 
-              .addField('👥 Zuschauer:', user.data[0].view_count, true)
+              .addField('👥 Profilaufrufe:', user.data[0].view_count, true);
 
           //Offline Edit
           try {
@@ -301,12 +310,16 @@ module.exports = class TwitchAnnouncerCommand extends Command {
                 around: embedID,
                 limit: 1
               })
-              .then(msg => {
+              .then((msg) => {
                 const fetchedMsg = msg.first();
-                fetchedMsg.edit(offlineEmbed);
+                fetchedMsg
+                  .edit(offlineEmbed)
+                  .then((m) => m.delete({ timeout: 600000 }));
               });
           } catch (error) {
-            message.say(':x: Ich konnte die Nachricht nicht bearbeiten').then(m => m.delete({timeout: 15000}));
+            message
+              .say(':x: Ich konnte die Nachricht nicht bearbeiten')
+              .then((m) => m.delete({ timeout: 15000 }));
             console.log(error);
             clearInterval(Ticker);
             return;

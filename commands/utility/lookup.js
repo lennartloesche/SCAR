@@ -17,10 +17,9 @@ module.exports = class LookupCommand extends Command {
       args: [
         {
           key: 'text',
-          prompt:
-            'Was möchtest du aufdecken? Bitte schreibe eine Domain/IP.',
+          prompt: 'Was möchtest du aufdecken? Bitte schreibe eine Domain/IP.',
           type: 'string',
-          validate: function(text) {
+          validate: function (text) {
             return text.length < 50;
           }
         }
@@ -39,7 +38,7 @@ module.exports = class LookupCommand extends Command {
       function embedResolve() {
         //embed json results
         return new MessageEmbed()
-        .setColor('#c72810')
+          .setColor('#c72810')
           .setAuthor(
             'IP/Hostname Informationen',
             'https://i.imgur.com/3lIiIv9.png',
@@ -63,9 +62,7 @@ module.exports = class LookupCommand extends Command {
       message.channel.send(embedResolve(json.isp));
     } catch (e) {
       console.error(e);
-      message.say(
-        'Fehler'
-      );
+      message.say('Fehler');
       return;
     }
   }

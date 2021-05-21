@@ -15,8 +15,7 @@ module.exports = class KickCommand extends Command {
       args: [
         {
           key: 'userToKick',
-          prompt:
-            'Bitte tagge die Person (@Name) oder benutze seine ID.',
+          prompt: 'Bitte tagge die Person (@Name) oder benutze seine ID.',
           type: 'string'
         },
         {
@@ -42,10 +41,10 @@ module.exports = class KickCommand extends Command {
         const kickEmbed = new MessageEmbed()
           .addField('Gekickt:', userToKick)
           .addField('Grund:', reason)
-          .setColor("#c72810")
+          .setColor('#c72810');
         message.channel.send(kickEmbed);
       })
-      .catch(err => {
+      .catch((err) => {
         message.say(
           ':x: Fehler, wahrscheinlich habe ich keine Berechtigungen um diese Person zu kicken!'
         );

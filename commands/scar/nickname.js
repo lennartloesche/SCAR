@@ -7,8 +7,7 @@ module.exports = class NicknameCommand extends Command {
       aliases: ['set-nick', 'set-nickname', 'name'],
       group: 'scar',
       memberName: 'nickname',
-      description:
-        "Nickname setzen von einer Person oder von einem selber",
+      description: 'Nickname setzen von einer Person oder von einem selber',
       clientPermissions: ['MANAGE_NICKNAMES'],
       userPermissions: ['MANAGE_NICKNAMES'],
       guildOnly: true,
@@ -30,13 +29,13 @@ module.exports = class NicknameCommand extends Command {
 
   async run(message, { memberName, nickname }) {
     if (nickname === 'remove') {
-        await memberName.setNickname('');
-      } 
-      else {
-        await memberName.setNickname(nickname);
+      await memberName.setNickname('');
+    } else {
+      await memberName.setNickname(nickname);
 
-      if(message.deletable) {
-      message.delete();
+      if (message.deletable) {
+        message.delete();
       }
-      }}
     }
+  }
+};

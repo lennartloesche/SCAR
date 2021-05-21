@@ -62,11 +62,7 @@ module.exports = class BotStatusCommand extends Command {
       )
       .addField(`System`, `${platform} ${archInfo}`, true)
 
-      .addField(
-        'Befehle',
-        `${commandTotal.length} Befehle verfügbar`,
-        true
-      )
+      .addField('Befehle', `${commandTotal.length} Befehle verfügbar`, true)
       .addField(
         'Server, Users',
         `Auf ${this.client.guilds.cache.size}, mit einer Summe von ${memberCount} Usern.`
