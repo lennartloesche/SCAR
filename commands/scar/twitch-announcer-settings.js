@@ -92,45 +92,15 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
       return;
     }
 
-    // Search by name
-    let announcedChannel = message.guild.channels.cache.find(
-      (channel) => channel.name == streamChannel
-    );
-
-    // Search by id
-    if (message.guild.channels.cache.get(streamChannel))
-      announcedChannel = message.guild.channels.cache.get(streamChannel);
-
-    if (!announcedChannel) {
-      message
-        .say(':x: ' + streamChannel + ' wurde nicht gefunden')
-        .then((m) => m.delete({ timeout: 15000 }));
-      return;
-    }
-
     //Twitch Section
-    const scope = 'user:read:email';
     const textFiltered = textRaw.replace(/https\:\/\/twitch.tv\//g, '');
-    let access_token;
-    try {
-      access_token = await TwitchAPI.getToken(
-        twitchClientID,
-        twitchClientSecret,
-        scope
-      );
-    } catch (e) {
-      message.say(':x: ' + e).then((m) => m.delete({ timeout: 15000 }));
-      return;
-    }
-
     try {
       var user = await TwitchAPI.getUserInfo(
-        access_token,
+        TwitchAPI.access_token,
         twitchClientID,
         textFiltered
       );
     } catch (e) {
-      message.say(':x: ' + e).then((m) => m.delete({ timeout: 15000 }));
       return;
     }
 
@@ -139,8 +109,8 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
     Twitch_DB.set(`${message.guild.id}.twitchAnnouncer`, {
       botSay: sayMsg,
       name: user.data[0].display_name,
-      channelID: announcedChannel.id,
-      channel: announcedChannel.name,
+      channelID: streamChannel.id,
+      channel: streamChannel.name,
       timer: timer,
       savedName: message.member.displayName,
       savedAvatar: message.author.displayAvatarURL(),
@@ -160,14 +130,13 @@ module.exports = class TwitchAnnouncerSettingsCommand extends Command {
       )
       .setColor('#c72810')
       .setThumbnail(user.data[0].profile_image_url)
-      .addField('Vorabnachricht', sayMsg)
       .addField(`Streamer`, user.data[0].display_name, true)
-      .addField(`Channel`, announcedChannel.name, true)
-      .addField('👥 Zuschauer:', user.data[0].view_count, true)
+      .addField(`Channel`, streamChannel.name, true)
+      .addField('👥 Profilaufrufe:', user.data[0].view_count, true)
       .setFooter(message.member.displayName, message.author.displayAvatarURL())
       .setTimestamp();
 
-    //Send Reponse
-    message.say(embed);
+    //Send Response
+    message.channel.send(embed);
   }
 };
