@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class UnmuteCommand extends Command {
   constructor(client) {
     super(client, {
@@ -20,7 +22,7 @@ module.exports = class UnmuteCommand extends Command {
     );
     var embed = new MessageEmbed()
       .setDescription('Bitte gib eine Person an!')
-      .setColor('#c72810');
+      .setColor(color);
     if (!tomute)
       return message.channel
         .send(embed)
@@ -28,7 +30,7 @@ module.exports = class UnmuteCommand extends Command {
 
     var embed = new MessageEmbed()
       .setDescription('**❯ Fehlende Berechtigungen ✘**')
-      .setColor('#c72810');
+      .setColor(color);
     if (tomute.hasPermission('MUTE_MEMBERS'))
       return message.channel
         .send(embed)
@@ -39,7 +41,7 @@ module.exports = class UnmuteCommand extends Command {
 
     var embed = new MessageEmbed()
       .setDescription('**❯ Erfolgreich entmutet ✓**')
-      .setColor('#c72810');
+      .setColor(color);
     tomute.roles.remove(muterole.id);
     message.channel.send(embed).then((m) => m.delete({ timeout: 9000 }));
   }

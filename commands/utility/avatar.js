@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class AvatarCommand extends Command {
   constructor(client) {
     super(client, {
@@ -49,7 +51,7 @@ module.exports = class AvatarCommand extends Command {
       .setImage(
         user.displayAvatarURL({ format: 'png', dynamic: true, size: 4096 })
       )
-      .setColor('#c72810')
+      .setColor(color)
       .setFooter(
         `Angefragt von ${message.author.tag}`,
         `${message.author.displayAvatarURL()}`

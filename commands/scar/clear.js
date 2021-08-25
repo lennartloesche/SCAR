@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class ClearCommand extends Command {
   constructor(client) {
     super(client, {
@@ -26,7 +28,7 @@ module.exports = class ClearCommand extends Command {
     const embed = new MessageEmbed()
       .setTitle(`Löschung`)
       .setDescription(`Erfolgreich **${deleteCount} Nachrichten** gelöscht`)
-      .setColor('#c72810')
+      .setColor(color)
       .setFooter(
         `Ausgeführt von: ${message.author.tag}`,
         `${message.author.displayAvatarURL()}`

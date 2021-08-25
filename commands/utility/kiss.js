@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const Discord = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class KissCommand extends Command {
   constructor(client) {
     super(client, {
@@ -33,7 +35,7 @@ module.exports = class KissCommand extends Command {
     let pick = gifs[Math.floor(Math.random() * gifs.length)];
 
     let embed = new Discord.MessageEmbed();
-    embed.setColor('#c72810');
+    embed.setColor(color);
     embed.setImage(pick);
 
     if (message.author === user) return;

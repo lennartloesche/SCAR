@@ -2,6 +2,8 @@ const { MessageEmbed } = require('discord.js');
 const { Command } = require('discord.js-commando');
 const fetch = require('node-fetch');
 
+const { color } = require('../../config.json');
+
 module.exports = class CSGOStatsCommand extends Command {
   constructor(client) {
     super(client, {
@@ -18,7 +20,7 @@ module.exports = class CSGOStatsCommand extends Command {
     fetch(url, {
       method: 'GET',
       headers: {
-        'TRN-Api-Key': `KEY`,
+        'TRN-Api-Key': `apikey`,
         Accept: 'application/json',
         'Accept-Encoding': 'gzip'
       }
@@ -44,7 +46,7 @@ module.exports = class CSGOStatsCommand extends Command {
             `${this.client.user.username}`,
             this.client.user.displayAvatarURL()
           )
-          .setColor('#c72810')
+          .setColor(color)
           .addFields(result);
         message.channel.send(embed);
       })

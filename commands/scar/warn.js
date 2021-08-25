@@ -22,7 +22,7 @@ module.exports = class WarnCommand extends Command {
     let cont = args.shift().toLowerCase();
     let reason = args.slice(1).join(' ');
     var warningEmbed = new MessageEmbed()
-      .setColor('#c72810')
+      .setColor(color)
       .setTitle('Du wurdest verwarnt!')
       .addFields({ name: 'Grund', value: reason })
       .setTimestamp(message.createdAt);

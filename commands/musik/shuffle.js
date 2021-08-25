@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const Pagination = require('discord-paginationembed');
 
+const { color } = require('../../config.json');
+
 module.exports = class ShuffleQueueCommand extends Command {
   constructor(client) {
     super(client, {
@@ -35,7 +37,9 @@ module.exports = class ShuffleQueueCommand extends Command {
       return;
     }
     if (message.guild.musicData.queue.length < 1)
-      return message.say(':x: Es befindet sich kein Song in der Warteschlange!');
+      return message.say(
+        ':x: Es befindet sich kein Song in der Warteschlange!'
+      );
 
     shuffleQueue(message.guild.musicData.queue);
 
@@ -45,12 +49,12 @@ module.exports = class ShuffleQueueCommand extends Command {
       .setAuthorizedUsers([message.author.id])
       .setChannel(message.channel)
       .setElementsPerPage(10)
-      .formatField('# - Song', function(e) {
+      .formatField('# - Song', function (e) {
         return `**${queueClone.indexOf(e) + 1}**: ${e.title}`;
       });
 
     queueEmbed.embed
-      .setColor("#c72810")
+      .setColor(color)
       .setTitle(':twisted_rightwards_arrows: Neue Warteschlange!');
     queueEmbed.build();
   }

@@ -2,6 +2,8 @@ const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
 
+const { color } = require('../../config.json');
+
 module.exports = class LookupCommand extends Command {
   constructor(client) {
     super(client, {
@@ -38,7 +40,7 @@ module.exports = class LookupCommand extends Command {
       function embedResolve() {
         //embed json results
         return new MessageEmbed()
-          .setColor('#c72810')
+          .setColor(color)
           .setAuthor(
             'IP/Hostname Informationen',
             'https://i.imgur.com/3lIiIv9.png',

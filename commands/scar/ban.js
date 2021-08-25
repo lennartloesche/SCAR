@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class BanCommand extends Command {
   constructor(client) {
     super(client, {
@@ -49,8 +51,8 @@ module.exports = class BanCommand extends Command {
       .then(() => {
         const banEmbed = new MessageEmbed()
           .addField('Gebannt:', userToBan)
-          .addField('Grund', reason)
-          .setColor('#c72810');
+          .addField('Grund:', reason)
+          .setColor(color);
         message.channel.send(banEmbed);
       })
       .catch((err) => {

@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const commando = require('discord.js-commando');
 
+const { color } = require('../../config.json');
+
 module.exports = class NukeChannelCommand extends commando.Command {
   constructor(client) {
     super(client, {
@@ -25,7 +27,7 @@ module.exports = class NukeChannelCommand extends commando.Command {
       const embed = new Discord.MessageEmbed()
         .setTitle(`**BOOM!**`)
         .setImage(`https://media.giphy.com/media/XUFPGrX5Zis6Y/giphy.gif`)
-        .setColor('#c72810');
+        .setColor(color);
 
       channel2.send(embed).then((m) => m.delete({ timeout: 20000 }));
     });

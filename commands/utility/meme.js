@@ -2,6 +2,8 @@ const { Command } = require('discord.js-commando');
 const got = require('got');
 const Discord = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class MemeCommand extends Command {
   constructor(client) {
     super(client, {
@@ -34,7 +36,7 @@ module.exports = class MemeCommand extends Command {
       embed.setTitle(`${memeTitle}`);
       embed.setURL(`${memeUrl}`);
       embed.setImage(memeImage);
-      embed.setColor('#c72810');
+      embed.setColor(color);
       embed.setFooter(`👍 ${memeUpvotes} 👎 ${memeDownvotes}`);
       message.channel.send(embed);
     });

@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class KickCommand extends Command {
   constructor(client) {
     super(client, {
@@ -41,7 +43,7 @@ module.exports = class KickCommand extends Command {
         const kickEmbed = new MessageEmbed()
           .addField('Gekickt:', userToKick)
           .addField('Grund:', reason)
-          .setColor('#c72810');
+          .setColor(color);
         message.channel.send(kickEmbed);
       })
       .catch((err) => {

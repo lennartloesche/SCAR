@@ -2,6 +2,8 @@ const { Command } = require('discord.js-commando');
 const Discord = require('discord.js');
 const { parse } = require('twemoji-parser');
 
+const { color } = require('../../config.json');
+
 module.exports = class EmojiCommand extends Command {
   constructor(client) {
     super(client, {
@@ -22,7 +24,7 @@ module.exports = class EmojiCommand extends Command {
     let custom = Discord.Util.parseEmoji(emoji);
     const embed = new Discord.MessageEmbed()
       .setTitle(`Vergrößerte Version von ${emoji}`)
-      .setColor('#c72810');
+      .setColor(color);
 
     if (custom.id) {
       embed.setImage(

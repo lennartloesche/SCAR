@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const Pagination = require('discord-paginationembed');
 
+const { color } = require('../../config.json');
+
 module.exports = class ListCommand extends Command {
   constructor(client) {
     super(client, {
@@ -26,7 +28,7 @@ module.exports = class ListCommand extends Command {
         return `**${queueClone.indexOf(e) + 1}**: ${e.title}`;
       });
 
-    queueEmbed.embed.setColor('#c72810').setTitle('Warteschlange');
+    queueEmbed.embed.setColor(color).setTitle('Warteschlange');
     queueEmbed.build();
   }
 };

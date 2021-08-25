@@ -1,6 +1,8 @@
 const commando = require('discord.js-commando');
 const Discord = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class LockCommand extends commando.Command {
   constructor(...args) {
     super(...args, {
@@ -25,7 +27,7 @@ module.exports = class LockCommand extends commando.Command {
         embed: {
           title: `${channel.name} | ${message.guild.name}`,
           description: `${channel} wurde bereits gesperrt!`,
-          color: '#c72810',
+          color: color,
           timestamp: new Date()
         }
       });
@@ -37,8 +39,8 @@ module.exports = class LockCommand extends commando.Command {
     message.channel.send({
       embed: {
         title: `Lockdown! | ${message.guild.name}`,
-        description: `${channel} wurde gesperrt von: ${message.author.tag}`,
-        color: '#c72810',
+        description: `${channel} wurde gesperrt von ${message.author.tag}`,
+        color: color,
         timestamp: new Date()
       }
     });

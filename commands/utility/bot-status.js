@@ -3,6 +3,8 @@ const Discord = require('discord.js');
 const os = require('os');
 const pkg = require('../../package.json');
 
+const { color } = require('../../config.json');
+
 module.exports = class BotStatusCommand extends Command {
   constructor(client) {
     super(client, {
@@ -110,7 +112,7 @@ module.exports = class BotStatusCommand extends Command {
     const StatusEmbed = new Discord.MessageEmbed()
       .setThumbnail(this.client.user.displayAvatarURL())
       .setTitle(`${this.client.user.username}`)
-      .setColor('#c72810');
+      .setColor(color);
 
     if (isOwner)
       StatusEmbed.addField(

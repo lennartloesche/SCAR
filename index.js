@@ -3,7 +3,7 @@ const { Structures } = require('discord.js');
 const Discord = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { FILTER_LIST, prefix, token } = require('./config.json');
+const { FILTER_LIST, prefix, token, color } = require('./config.json');
 const config = require('./config.json');
 var moment = require('moment');
 
@@ -15,7 +15,9 @@ Structures.extend('Guild', function (Guild) {
       super(client, data);
       this.musicData = {
         queue: [],
+        queueHistory: [],
         isPlaying: false,
+        isPreviousTrack: false,
         nowPlaying: null,
         songDispatcher: null,
         skipTimer: false,
@@ -51,7 +53,7 @@ Structures.extend('Guild', function (Guild) {
 
 const client = new CommandoClient({
   commandPrefix: prefix,
-  owner: '137259014986792960'
+  owner: ['137259014986792960', '398101340322136075']
 });
 
 client.registry
@@ -107,9 +109,9 @@ setInterval(() => {
     )} Mitglieder`
   ];
   let activity = activities[Math.floor(Math.random() * activities.length)];
-  client.user.setActivity(activity, {
-    type: 'STREAMING',
-    url: 'https://www.youtube.com/watch?v=Lrj2Hq7xqQ8'
+  client.user.setPresence({
+    activity: { name: activity },
+    status: 'dnd'
   });
 }, 15000);
 
@@ -126,13 +128,7 @@ client.on('ready', () => {
     `│ > Eingeloggt als ${client.user.tag}!                                                 │`
   );
   console.log(
-    '├──────────────────────────────────── Anzahl ────────────────────────────────────────┤'
-  );
-  console.log(
-    `│ > Aktiv auf ${client.guilds.cache.size} Server!                                                              │`
-  );
-  console.log(
-    '└────────────────────────────────────────────────────────────────────────────────────┘	'
+    '└────────────────────────────────────────────────────────────────────────────────────┘'
   );
   console.log(' ');
 });
@@ -158,7 +154,7 @@ client.on('message', (message) => {
         .setDescription(`${message.content}`)
         .setTimestamp(message.createdAt)
         .setFooter(`${client.user.username} Chatguard-Log`)
-        .setColor('#FF0000');
+        .setColor('#2a2a2a');
     client.channels
       .fetch(config.chatguardlogs)
       .then((channel) => channel.send(log));
@@ -168,7 +164,7 @@ client.on('message', (message) => {
       .setDescription(`Bitte achte auf deine Wortwahl!`)
       .setTimestamp(message.createdAt)
       .setFooter(client.user.username, client.user.displayAvatarURL())
-      .setColor('#FF0000');
+      .setColor('#2a2a2a');
     message.channel.send(embed).then((m) => m.delete({ timeout: 4000 }));
   }
 
@@ -207,7 +203,7 @@ client.on('guildMemberAdd', (member) => {
   );
   var embed = new Discord.MessageEmbed()
     .setDescription(` **${member}** hat den Server betreten`)
-    .setColor('#c72810')
+    .setColor(color)
     .setTimestamp()
     .setFooter(client.user.username, member.user.displayAvatarURL());
   welcomeChannel.send(embed);
@@ -223,7 +219,7 @@ client.on('guildMemberRemove', (member) => {
   );
   var embed = new Discord.MessageEmbed()
     .setDescription(` **${member.user.tag}** hat den Server verlassen`)
-    .setColor('#c72810')
+    .setColor(color)
     .setTimestamp()
     .setFooter(client.user.username, member.user.displayAvatarURL());
   welcomeChannel.send(embed);
@@ -238,7 +234,7 @@ client.on('guildMemberAdd', async (member) => {
     let channel = client.channels.cache.get(logChan);
 
     const embed = new MessageEmbed()
-      .setColor('#c72810')
+      .setColor(color)
       .setTitle(`${member.user}`)
       .setDescription(
         `⚠ **Möglicher Alt Account**
@@ -249,34 +245,6 @@ client.on('guildMemberAdd', async (member) => {
       .setTimestamp();
 
     channel.send(embed);
-    msg = await channel.send('Soll ich ihn kicken?');
-    msg.react('👍').then(() => msg.react('👎'));
-
-    // Checking for reactionss
-    msg
-      .awaitReactions(
-        (reaction, user) =>
-          (reaction.emoji.name == '👍' || reaction.emoji.name == '👎') &&
-          user.id !== client.user.id,
-        { max: 1, time: 600000, errors: ['time'] }
-      )
-      .then((collected) => {
-        const reaction = collected.first();
-        if (reaction.emoji.name === '👍') {
-          member.kick();
-          return msg.edit('Person wurde gekickt!');
-        } else if (reaction.emoji.name === '👎') {
-          return msg.edit('Okay, die Person kann bleiben!');
-        }
-      })
-      .catch((collected) => {
-        channel.send(
-          'Ihr hattet 10 Minuten um darauf zu reagieren.. jetzt müsst ihr ihn manuell kicken!'
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 });
 

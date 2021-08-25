@@ -7,7 +7,8 @@ const Canvas = require('canvas');
 const {
   twitchClientID,
   twitchClientSecret,
-  prefix
+  prefix,
+  color
 } = require('../../config.json');
 
 // Skips loading if not found in config.json
@@ -78,7 +79,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
         'https://twitch.tv/' + user.data[0].display_name
       )
       .setTitle(`:white_check_mark: Twitch Announcer aktiviert!`)
-      .setColor('#c72810')
+      .setColor(color)
       .setThumbnail(user.data[0].profile_image_url)
       .addField(`Streamer`, `${DBInfo.name}`, true)
       .addField(`Channel`, `${DBInfo.channel}`, true)
@@ -94,7 +95,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
         'https://twitch.tv/' + user.data[0].display_name
       )
       .setTitle(`:x: Twitch Announcer deaktiviert!`)
-      .setColor('#c72810')
+      .setColor(color)
       .setThumbnail(user.data[0].profile_image_url)
       .addField(`Streamer`, `${DBInfo.name}`, true)
       .addField(`Channel`, `${DBInfo.channel}`, true)
@@ -221,7 +222,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
               .addField('Streamtitel:', streamInfo.data[0].title)
               .addField('🎮 Spiel:', streamInfo.data[0].game_name, true)
               .addField('👥 Zuschauer:', streamInfo.data[0].viewer_count, true)
-              .setColor('#c72810')
+              .setColor(color)
               .setFooter(
                 'Stream gestartet',
                 'https://www.pikpng.com/pngl/b/45-455766_twitch-community-twitch-logo-png-transparent-clipart.png'
@@ -292,7 +293,7 @@ module.exports = class TwitchAnnouncerCommand extends Command {
               .setTitle(
                 user.data[0].display_name + ' hat ' + currentGame + ' gestreamt'
               )
-              .setColor('#c72810')
+              .setColor(color)
               .setTimestamp()
               .setFooter(
                 'Stream beendet',

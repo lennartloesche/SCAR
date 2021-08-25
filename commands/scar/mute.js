@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class MuteCommand extends Command {
   constructor(client) {
     super(client, {
@@ -21,7 +23,7 @@ module.exports = class MuteCommand extends Command {
           key: 'reason',
           prompt: 'Nenne einen Grund?',
           type: 'string',
-          default: `kein Grund angegeben`
+          default: `Kein Grund angegeben`
         }
       ]
     });
@@ -34,7 +36,7 @@ module.exports = class MuteCommand extends Command {
       try {
         mutedRole = await message.guild.roles.create({
           name: 'Kanal » Mute',
-          color: '#c72810',
+          color: color,
           permissions: []
         });
         message.guild.channels.cache.forEach(async (channel) => {
@@ -55,9 +57,9 @@ module.exports = class MuteCommand extends Command {
         message.delete();
         const muteEmbed = new MessageEmbed()
           .addField('Gemutet:', user)
-          .addField('Grund', reason)
-          .setFooter(`Gemutet von: ${message.author.tag}`)
-          .setColor('#c72810');
+          .addField('Grund:', reason)
+          .setFooter(`Gemutet von ${message.author.tag}`)
+          .setColor(color);
         message.channel
           .send(muteEmbed)
           .then((m) => m.delete({ timeout: 120000 }));

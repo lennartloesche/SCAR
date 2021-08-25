@@ -1,6 +1,8 @@
 const { Command } = require('discord.js-commando');
 const Discord = require('discord.js');
 
+const { color } = require('../../config.json');
+
 module.exports = class RestartCommand extends Command {
   constructor(client) {
     super(client, {
@@ -17,8 +19,9 @@ module.exports = class RestartCommand extends Command {
     const stop = new Discord.MessageEmbed()
       .setTitle(`Bot Restart!`)
       .setDescription(`Der Bot ist in **5 Sekunden** wieder online!`)
-      .setColor(0x7415e8)
+      .setColor(color)
       .setTimestamp();
+    message.delete();
 
     if ((message.author.id = '137259014986792960')) {
       try {

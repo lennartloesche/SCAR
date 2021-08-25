@@ -2,6 +2,8 @@ const { Command } = require('discord.js-commando');
 const db = require('quick.db');
 const Pagination = require('discord-paginationembed');
 
+const { color } = require('../../config.json');
+
 module.exports = class CreatePlaylistCommand extends Command {
   constructor(client) {
     super(client, {
@@ -53,10 +55,10 @@ module.exports = class CreatePlaylistCommand extends Command {
         .setAuthorizedUsers([message.member.id])
         .setChannel(message.channel)
         .setElementsPerPage(10)
-        .formatField('# - Title', function(e) {
+        .formatField('# - Title', function (e) {
           return `**${urlsArrayClone.indexOf(e) + 1}**: ${e.title}`;
         });
-      savedSongsEmbed.embed.setColor("#c72810").setTitle('Gespeicherte Songs');
+      savedSongsEmbed.embed.setColor(color).setTitle('Gespeicherte Songs');
       savedSongsEmbed.build();
     } else {
       message.reply(`Du hast keine Playlist mit dem Namen: ${playlistName}`);
