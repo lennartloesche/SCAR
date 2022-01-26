@@ -9,7 +9,7 @@
     "discord.js": "github:discordjs/discord.js#stable",
     "discord.js-commando": "github:discordjs/Commando",
     "ffmpeg": "^0.0.4",
-    "ffmpeg-static": "^4.2.7",
+    "ffmpeg-static": "^4.4.1",
     "fs": "^0.0.1-security",
     "got": "^6.7.1",
     "moment": "^2.29.1",
