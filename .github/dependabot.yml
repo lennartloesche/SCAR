@@ -11,3 +11,5 @@ updates:
     assignees:
       - "l3nnartt"
       - "DqvidTM"
+    # pr requests limit
+    open-pull-requests-limit: 100
